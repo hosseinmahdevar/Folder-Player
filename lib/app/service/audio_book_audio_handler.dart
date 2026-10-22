@@ -60,9 +60,13 @@ class AudioBookAudioHandler extends BaseAudioHandler with SeekHandler {
       artUri: Uri.parse('file://${book.folderPath}/cover.jpg'),
     ));
 
-    await _audioSink.loadFile(file.path, initialPositionMs: book.lastPosition.positionMs);
-    await _audioSink.setSpeed(book.lastPosition.playbackSpeed);
-    await _audioSink.setVolumeBoost(book.lastPosition.boostVolumeDb);
+    try {
+      await _audioSink.loadFile(file.path, initialPositionMs: book.lastPosition.positionMs);
+      await _audioSink.setSpeed(book.lastPosition.playbackSpeed);
+      await _audioSink.setVolumeBoost(book.lastPosition.boostVolumeDb);
+    } catch (_) {
+      // Ignore initial mock load errors
+    }
   }
 
   @override

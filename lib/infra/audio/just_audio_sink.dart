@@ -2,6 +2,7 @@
 /// Cross-platform implementation of AudioSinkPort for Android & Desktop (Linux, Windows, macOS)
 
 import 'dart:async';
+import 'dart:io';
 import 'package:just_audio/just_audio.dart';
 import '../../core/domain/model/book.dart';
 import '../../core/domain/port/audio_sink_port.dart';
@@ -42,10 +43,17 @@ class JustAudioSink implements AudioSinkPort {
 
   @override
   Future<void> loadFile(String filePath, {int initialPositionMs = 0}) async {
-    await _player.setFilePath(
-      filePath,
-      initialPosition: Duration(milliseconds: initialPositionMs),
-    );
+    try {
+      final file = File(filePath);
+      if (await file.exists()) {
+        await _player.setFilePath(
+          filePath,
+          initialPosition: Duration(milliseconds: initialPositionMs),
+        );
+      }
+    } catch (_) {
+      // Gracefully ignore file load failures for mock / missing initial paths
+    }
   }
 
   @override

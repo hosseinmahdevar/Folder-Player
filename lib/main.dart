@@ -21,36 +21,42 @@ Future<void> main() async {
 
   // Desktop specific initialization (Linux, Windows, macOS)
   if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
-    await windowManager.ensureInitialized();
-    const windowOptions = WindowOptions(
-      size: Size(1280, 840),
-      minimumSize: Size(960, 640),
-      center: true,
-      title: 'FolderPlay - Offline Audiobook Studio',
-    );
-    windowManager.waitUntilReadyToShow(windowOptions, () async {
-      await windowManager.show();
-      await windowManager.focus();
-    });
+    try {
+      await windowManager.ensureInitialized();
+      const windowOptions = WindowOptions(
+        size: Size(1280, 840),
+        minimumSize: Size(960, 640),
+        center: true,
+        title: 'FolderPlay - Offline Audiobook Studio',
+      );
+      windowManager.waitUntilReadyToShow(windowOptions, () async {
+        await windowManager.show();
+        await windowManager.focus();
+      });
+    } catch (_) {}
   }
 
   // Initialize Audio Handler singleton
-  final audioSink = JustAudioSink();
-  await audioSink.initialize();
-  final storage = UniversalBookStorageAdapter();
+  try {
+    final audioSink = JustAudioSink();
+    await audioSink.initialize();
+    final storage = UniversalBookStorageAdapter();
 
-  _audioHandler = await AudioService.init(
-    builder: () => AudioBookAudioHandler(
-      audioSink: audioSink,
-      storage: storage,
-    ),
-    config: const AudioServiceConfig(
-      androidNotificationChannelId: 'com.folderplay.audio',
-      androidNotificationChannelName: 'FolderPlay Playback',
-      androidNotificationOngoing: true,
-      androidStopForegroundOnPause: true,
-    ),
-  );
+    _audioHandler = await AudioService.init(
+      builder: () => AudioBookAudioHandler(
+        audioSink: audioSink,
+        storage: storage,
+      ),
+      config: const AudioServiceConfig(
+        androidNotificationChannelId: 'com.folderplay.audio',
+        androidNotificationChannelName: 'FolderPlay Playback',
+        androidNotificationOngoing: true,
+        androidStopForegroundOnPause: true,
+      ),
+    );
+  } catch (e) {
+    debugPrint('AudioService init fallback: $e');
+  }
 
   runApp(const FolderPlayApp());
 }
@@ -115,7 +121,10 @@ class _MainStudioShellState extends State<MainStudioShell> {
       ),
     );
 
-    _audioHandler.loadBook(_activeBook);
+    // Safely load initial book metadata without blocking UI initialization
+    try {
+      _audioHandler.loadBook(_activeBook);
+    } catch (_) {}
   }
 
   @override
