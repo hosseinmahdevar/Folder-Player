@@ -17,7 +17,7 @@ jobs:
   # 1. VERIFY & ANALYZE DART CODE
   # =========================================================================
   test:
-    name: Flutter Lint & Tests
+    name: Flutter Lint & Analyze
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -66,6 +66,10 @@ jobs:
           channel: 'stable'
           cache: true
 
+      # Self-healing: ensures Android platform files & gradle wrappers exist
+      - name: Ensure Android platform files
+        run: flutter create --platforms=android .
+
       - name: Install Dependencies
         run: flutter pub get
 
@@ -109,6 +113,10 @@ jobs:
       - name: Enable Linux Desktop
         run: flutter config --enable-linux-desktop
 
+      # Self-healing: ensures Linux desktop runner & CMake files exist
+      - name: Ensure Linux platform files
+        run: flutter create --platforms=linux .
+
       - name: Install Dependencies
         run: flutter pub get
 
@@ -117,8 +125,7 @@ jobs:
 
       - name: Package Linux Bundle
         run: |
-          cd build/linux/x64/release/bundle
-          tar -czvf ../../../../folderplay-linux-x64.tar.gz .
+          tar -czvf folderplay-linux-x64.tar.gz -C build/linux/x64/release/bundle .
 
       - name: Archive Linux Artifact
         uses: actions/upload-artifact@v4
@@ -146,6 +153,10 @@ jobs:
 
       - name: Enable Windows Desktop
         run: flutter config --enable-windows-desktop
+
+      # Self-healing: ensures Windows desktop runner & CMake files exist
+      - name: Ensure Windows platform files
+        run: flutter create --platforms=windows .
 
       - name: Install Dependencies
         run: flutter pub get
@@ -185,22 +196,25 @@ jobs:
       - name: Enable macOS Desktop
         run: flutter config --enable-macos-desktop
 
+      # Self-healing: ensures macOS desktop runner files exist
+      - name: Ensure macOS platform files
+        run: flutter create --platforms=macos .
+
       - name: Install Dependencies
         run: flutter pub get
 
       - name: Build macOS Release
         run: flutter build macos --release
 
-      - name: Package macOS Zip
+      - name: Package macOS Tarball
         run: |
-          cd build/macos/Build/Products/Release
-          zip -r ../../../../folderplay-macos-universal.zip FolderPlay.app
+          tar -czvf folderplay-macos-universal.tar.gz -C build/macos/Build/Products/Release FolderPlay.app
 
       - name: Archive macOS Artifact
         uses: actions/upload-artifact@v4
         with:
           name: folderplay-macos-universal
-          path: folderplay-macos-universal.zip
+          path: folderplay-macos-universal.tar.gz
 
   # =========================================================================
   # 6. AUTOMATED GITHUB RELEASE
@@ -216,14 +230,13 @@ jobs:
 
       - name: Download all build artifacts
         uses: actions/download-artifact@v4
+        with:
+          path: all-artifacts
 
       - name: Prepare Release Directory
         run: |
           mkdir -p release-assets
-          cp -r folderplay-android-builds/* release-assets/ 2>/dev/null || true
-          cp -r folderplay-linux-x64/* release-assets/ 2>/dev/null || true
-          cp -r folderplay-windows-x64/* release-assets/ 2>/dev/null || true
-          cp -r folderplay-macos-universal/* release-assets/ 2>/dev/null || true
+          find all-artifacts -type f -exec cp {} release-assets/ \;
           ls -la release-assets/
 
       - name: Create GitHub Release with Binaries
@@ -243,4 +256,4 @@ jobs:
             - **Android App Bundle (.aab)**: Google Play Store ready distribution package.
             - **Linux Desktop (.tar.gz)**: Native 64-bit Linux workstation binary.
             - **Windows Desktop (.zip)**: Native Windows x64 executable and runtime DLLs.
-            - **macOS Desktop (.zip)**: Native Universal macOS application bundle.
+            - **macOS Desktop (.tar.gz)**: Native Universal macOS application bundle.
