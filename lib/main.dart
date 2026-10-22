@@ -2,6 +2,7 @@
 /// Clean-Room Reconstruction of Smart AudioBook Player v11.9.0
 
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,6 +16,7 @@ import 'infra/audio/just_audio_sink.dart';
 import 'infra/storage/saf_storage_adapter.dart';
 
 late AudioBookAudioHandler _audioHandler;
+final UniversalBookStorageAdapter _storageAdapter = UniversalBookStorageAdapter();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,12 +42,11 @@ Future<void> main() async {
   try {
     final audioSink = JustAudioSink();
     await audioSink.initialize();
-    final storage = UniversalBookStorageAdapter();
 
     _audioHandler = await AudioService.init(
       builder: () => AudioBookAudioHandler(
         audioSink: audioSink,
-        storage: storage,
+        storage: _storageAdapter,
       ),
       config: const AudioServiceConfig(
         androidNotificationChannelId: 'com.folderplay.audio',
@@ -87,6 +88,9 @@ class _MainStudioShellState extends State<MainStudioShell> {
 
   // Mock initial book for immediate playability
   late Book _activeBook;
+  final List<Book> _libraryBooks = [];
+  final List<String> _customFolderPaths = [];
+  bool _isScanning = false;
 
   @override
   void initState() {
@@ -121,10 +125,68 @@ class _MainStudioShellState extends State<MainStudioShell> {
       ),
     );
 
+    _libraryBooks.add(_activeBook);
+
     // Safely load initial book metadata without blocking UI initialization
     try {
       _audioHandler.loadBook(_activeBook);
     } catch (_) {}
+  }
+
+  Future<void> _pickAndAddCustomFolder() async {
+    try {
+      final selectedDirectory = await FilePicker.platform.getDirectoryPath(
+        dialogTitle: 'Select Audiobook Folder or Root Library',
+      );
+
+      if (selectedDirectory == null || selectedDirectory.isEmpty) return;
+
+      setState(() => _isScanning = true);
+
+      // 1. Try scanning as single book directory
+      final singleBook = await _storageAdapter.scanSingleBookDirectory(selectedDirectory);
+      final newBooks = <Book>[];
+
+      if (singleBook != null && singleBook.files.isNotEmpty) {
+        newBooks.add(singleBook);
+      } else {
+        // 2. Scan as root folder containing subdirectories of audiobooks
+        final scannedSubDirs = await _storageAdapter.scanRootFolders([selectedDirectory]);
+        newBooks.addAll(scannedSubDirs);
+      }
+
+      setState(() {
+        if (!_customFolderPaths.contains(selectedDirectory)) {
+          _customFolderPaths.add(selectedDirectory);
+        }
+        for (final b in newBooks) {
+          if (!_libraryBooks.any((existing) => existing.folderPath == b.folderPath)) {
+            _libraryBooks.add(b);
+          }
+        }
+        _isScanning = false;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              newBooks.isEmpty
+                  ? 'No audio files found in selected folder.'
+                  : 'Added ${newBooks.length} audiobook(s) to Library.',
+            ),
+            backgroundColor: newBooks.isEmpty ? Colors.orange : FolderPlayTheme.studioEmerald,
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() => _isScanning = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add folder: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
   }
 
   @override
@@ -318,15 +380,92 @@ class _MainStudioShellState extends State<MainStudioShell> {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        Text('Library Folders (SAF & Local)', style: GoogleFonts.literata(fontSize: 22, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 16),
-        Card(
-          child: ListTile(
-            leading: const Icon(Icons.folder, color: FolderPlayTheme.amberGold),
-            title: Text(_activeBook.title),
-            subtitle: Text('${_activeBook.author} · Started (31%)'),
-            trailing: const Icon(Icons.play_arrow),
-            onTap: () => setState(() => _selectedIndex = 0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Audiobook Library',
+                    style: GoogleFonts.literata(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '${_libraryBooks.length} book(s) available',
+                    style: const TextStyle(color: Colors.grey, fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: FolderPlayTheme.amberGold,
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+              onPressed: _isScanning ? null : _pickAndAddCustomFolder,
+              icon: _isScanning
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black),
+                    )
+                  : const Icon(Icons.create_new_folder),
+              label: Text(_isScanning ? 'Scanning...' : 'Add Folder'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        if (_customFolderPaths.isNotEmpty) ...[
+          Text(
+            'Custom Configured Folders:',
+            style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w600, color: FolderPlayTheme.calibrationCyan),
+          ),
+          const SizedBox(height: 6),
+          ..._customFolderPaths.map(
+            (p) => Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Text(
+                '• $p',
+                style: const TextStyle(fontSize: 11, color: Colors.grey, fontFamily: 'monospace'),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+        ..._libraryBooks.map(
+          (book) => Card(
+            margin: const EdgeInsets.only(bottom: 12),
+            child: ListTile(
+              leading: const Icon(Icons.folder, color: FolderPlayTheme.amberGold, size: 36),
+              title: Text(
+                book.title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                '${book.author} · ${book.files.length} track(s) · ${(book.totalDurationMs / (1000 * 60)).round()} min',
+              ),
+              trailing: IconButton(
+                icon: const Icon(Icons.play_circle_fill, color: FolderPlayTheme.amberGold, size: 32),
+                onPressed: () {
+                  setState(() {
+                    _activeBook = book;
+                    _selectedIndex = 0;
+                  });
+                  _audioHandler.loadBook(book);
+                  _audioHandler.play();
+                },
+              ),
+              onTap: () {
+                setState(() {
+                  _activeBook = book;
+                  _selectedIndex = 0;
+                });
+                _audioHandler.loadBook(book);
+              },
+            ),
           ),
         ),
       ],

@@ -22,7 +22,7 @@ class UniversalBookStorageAdapter implements BookStoragePort {
       final entities = await rootDir.list().toList();
       for (final entity in entities) {
         if (entity is Directory) {
-          final book = await _parseBookDirectory(entity);
+          final book = await scanSingleBookDirectory(entity.path);
           if (book != null) {
             books.add(book);
           }
@@ -31,6 +31,13 @@ class UniversalBookStorageAdapter implements BookStoragePort {
     }
 
     return books;
+  }
+
+  @override
+  Future<Book?> scanSingleBookDirectory(String directoryPath) async {
+    final bookDir = Directory(directoryPath);
+    if (!await bookDir.exists()) return null;
+    return _parseBookDirectory(bookDir);
   }
 
   Future<Book?> _parseBookDirectory(Directory bookDir) async {

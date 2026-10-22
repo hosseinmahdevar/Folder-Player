@@ -9,6 +9,9 @@ abstract class BookStoragePort {
   /// Scans configured root directories for audiobooks
   Future<List<Book>> scanRootFolders(List<String> rootFolderUris);
 
+  /// Scans a single book directory or directory containing audio files
+  Future<Book?> scanSingleBookDirectory(String directoryPath);
+
   /// Reads local sidecar files from a book directory
   Future<PlaybackPosition?> readPositionSidecar(String bookDirectoryUri);
   Future<List<Bookmark>> readBookmarksSidecar(String bookDirectoryUri, String bookId);
