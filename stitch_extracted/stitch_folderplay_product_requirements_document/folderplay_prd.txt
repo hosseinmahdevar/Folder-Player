@@ -1,0 +1,15 @@
+# PRD: FolderPlay - Clean-Room Reconstruction & Functional Specification
+*Decompiled Smart AudioBook Player v11.9.0 Specification*
+
+## Core Scope Summary
+- **App Name:** FolderPlay
+- **Target Device:** Mobile (Clean Flutter/Material 3 / Android aesthetic)
+- **Key Experience Pillars:**
+  1. Offline-first multi-file atomic books from local/SD root folders
+  2. Main Player Screen with pause-proportional auto-rewind, variable speed (0.5x–3.0x), volume boost (+20dB), and RNNoise neural speech enhancement
+  3. Sleep Timer with gentle fadeout and touchless accelerometer "Shake-to-Reset"
+  4. Character List & Reference Tracker (`characters.sabp.xml`)
+  5. Timestamped Bookmarks & Notes (`bookmarks.sabp.xml`)
+  6. Library View with lifecycle tabs (`Started`, `New`, `Finished`, Queue)
+  7. Sidecar metadata inspection (`position.sabp.dat`, `info.txt`, `libby.txt`, `.srt`)
+  8. Audio shaping modal (Parametric EQ, pitch shift, RNNoise, Mono mix, Loudness booster)

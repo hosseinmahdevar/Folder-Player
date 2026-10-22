@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;0,7..72,700;1,7..72,400&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-secondary-container":"#00311f","outline":"#99907b","tertiary-fixed-dim":"#4cd7f6","primary-container":"#fcd34d","error-container":"#93000a","on-error-container":"#ffdad6","surface-dim":"#0e141c","surface-container-high":"#242a33","on-surface":"#dde3ee","tertiary":"#dff7ff","inverse-surface":"#dde3ee","on-secondary-fixed":"#002113","surface-container-lowest":"#090f16","on-tertiary":"#003640","surface-tint":"#eac33e","surface-bright":"#343a42","on-background":"#dde3ee","primary":"#fff2d6","surface-container":"#1a2028","on-secondary":"#003824","on-tertiary-fixed-variant":"#004e5c","inverse-primary":"#735c00","error":"#ffb4ab","outline-variant":"#4d4635","surface-variant":"#2f353e","on-primary-container":"#715b00","on-primary":"#3c2f00","primary-fixed-dim":"#eac33e","surface-container-highest":"#2f353e","on-tertiary-fixed":"#001f26","on-primary-fixed-variant":"#574500","secondary-fixed":"#6ffbbe","surface":"#0e141c","surface-container-low":"#161c24","secondary":"#4edea3","on-primary-fixed":"#231b00","on-surface-variant":"#d0c6ae","on-tertiary-container":"#006678","secondary-container":"#00a572","tertiary-fixed":"#acedff","primary-fixed":"#ffe086","inverse-on-surface":"#2b3139","secondary-fixed-dim":"#4edea3","on-secondary-fixed-variant":"#005236","background":"#0e141c","tertiary-container":"#7fe5ff","on-error":"#690005"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-2xl":"3.5rem","gutter":"1rem","space-md":"1rem","space-xs":"0.25rem","space-sm":"0.5rem","gutter-mobile":"0.75rem","space-lg":"1.5rem","margin":"1.5rem","margin-mobile":"1rem","space-xl":"2.25rem"},"fontFamily":{"body-lg":["Manrope"],"label-lg":["Manrope"],"body-md":["Manrope"],"headline-xl":["Literata"],"timecode-display":["Manrope"],"headline-lg-mobile":["Literata"],"headline-md":["Literata"],"headline-lg":["Literata"],"body-sm":["Manrope"],"label-sm":["Manrope"],"headline-xl-mobile":["Literata"],"label-md":["Manrope"]},"fontSize":{"body-lg":["17px",{"lineHeight":"26px","fontWeight":"400"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.02em","fontWeight":"600"}],"body-md":["15px",{"lineHeight":"22px","fontWeight":"400"}],"headline-xl":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"600"}],"timecode-display":["32px",{"lineHeight":"38px","letterSpacing":"-0.03em","fontWeight":"700"}],"headline-lg-mobile":["22px",{"lineHeight":"30px","fontWeight":"500"}],"headline-md":["20px",{"lineHeight":"28px","fontWeight":"500"}],"headline-lg":["28px",{"lineHeight":"36px","fontWeight":"500"}],"body-sm":["13px",{"lineHeight":"18px","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.06em","fontWeight":"700"}],"headline-xl-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"600"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased select-none"><header class="fixed top-0 left-0 right-0 h-10 bg-surface-container-lowest z-50 flex items-center justify-between px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.5)]"><div class="flex items-center gap-space-md"><div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-error/80"></div><div class="w-3 h-3 rounded-full bg-primary-container/80"></div><div class="w-3 h-3 rounded-full bg-secondary/80"></div></div><div class="flex items-center gap-space-xs pl-space-xs"><span class="material-symbols-outlined text-primary-container text-[18px]">folder_special</span><span class="font-headline-md text-label-lg font-semibold tracking-tight text-primary">FolderPlay</span><span class="ml-1 px-1.5 py-0.5 rounded bg-surface-container-high text-primary-container text-label-sm font-bold uppercase tracking-wider">DSP+</span></div></div><div class="hidden md:flex items-center gap-space-md"><div class="flex items-center gap-1.5 bg-surface-container-low px-2 py-0.5 rounded"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm uppercase text-on-surface-variant">RNN Engine Active</span></div><div class="flex items-center gap-1.5 bg-surface-container-low px-2 py-0.5 rounded"><span class="material-symbols-outlined text-tertiary-fixed-dim text-[14px]">hard_drive</span><span class="font-label-sm text-label-sm text-on-surface-variant">NVME::AUDIO_POOL (412 GB free)</span></div></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-1 bg-surface-container-high px-2 py-0.5 rounded"><span class="material-symbols-outlined text-secondary text-[14px]">verified</span><span class="font-label-sm text-label-sm text-secondary">BIT-PERFECT</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><aside class="fixed left-0 top-10 bottom-8 w-64 bg-surface-container-lowest z-40 flex flex-col justify-between py-space-md shadow-[2px_0_12px_rgba(0,0,0,0.3)]"><div class="flex flex-col gap-space-xs"><div class="px-space-md pb-space-xs flex items-center justify-between"><span class="font-label-sm text-label-sm uppercase tracking-widest text-outline">Workstation</span><span class="font-label-sm text-label-sm text-outline-variant font-mono">v2.4.1</span></div><nav class="flex flex-col gap-1 px-space-sm" data-active-classes="bg-surface-container-high text-primary-container font-semibold rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.4)]"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="now-playing" href="#"><span class="material-symbols-outlined text-[18px]">play_circle</span><span class="font-label-lg text-label-lg">Now Playing</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="library-and-storage" href="#"><span class="material-symbols-outlined text-[18px]">library_books</span><span class="font-label-lg text-label-lg">Library &amp; Storage</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="audio-dsp-and-sound-shaping" href="#"><span class="material-symbols-outlined text-[18px]">graphic_eq</span><span class="font-label-lg text-label-lg">Audio DSP &amp; Sound Shaping</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="characters-and-bookmarks" href="#"><span class="material-symbols-outlined text-[18px]">bookmark_manager</span><span class="font-label-lg text-label-lg">Characters &amp; Bookmarks</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="opus-batch-transcoder" href="#"><span class="material-symbols-outlined text-[18px]">transform</span><span class="font-label-lg text-label-lg">Opus Batch Transcoder</span></a></nav></div><div class="px-space-md flex flex-col gap-space-xs"><div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-1"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-outline uppercase">Offline Vault</span><span class="material-symbols-outlined text-secondary text-[16px]">cloud_off</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">Zero telemetry. Pure local DAC path.</p></div></div></aside><div class="pl-64"><main class="relative pt-10 pb-8 min-h-screen bg-background w-full px-space-lg"><div class="flex flex-col w-full gap-space-lg pb-space-2xl">
+<!-- Top Storage Telemetry & SAF Nodes Rack -->
+<section class="flex flex-col gap-space-md">
+<div class="flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex items-baseline gap-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary-container">Filesystem Subsystem</span>
+<span class="text-outline text-label-sm font-mono">/mnt/storage_vfs</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="flex items-center gap-2 px-space-md py-2 rounded-lg bg-surface-container-high hover:bg-surface-bright text-on-surface transition-all duration-150 active:translate-y-0.5 shadow-md" id="btn-scan">
+<span class="material-symbols-outlined text-[18px] text-tertiary-fixed-dim">sync</span>
+<span class="font-label-lg text-label-lg">Rescan Hierarchies</span>
+</button>
+<button class="flex items-center gap-2 px-space-md py-2 rounded-lg bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container transition-all duration-150 active:translate-y-0.5 shadow-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">drive_folder_upload</span>
+<span class="font-label-lg text-label-lg">Mount Storage Node</span>
+</button>
+</div>
+</div>
+<!-- Dual Storage Nodes & Visual Pool Gauge -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- Storage Node 1: Primary Internal NVMe -->
+<div class="lg:col-span-4 bg-surface-container-low p-space-md rounded-xl flex flex-col justify-between gap-space-md shadow-lg relative overflow-hidden">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[20px]">storage</span>
+</div>
+<div>
+<div class="font-label-lg text-label-lg text-primary">Internal Fast NVMe</div>
+<div class="font-label-sm text-label-sm text-outline font-mono truncate">/Volumes/Storage/Audiobooks</div>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-secondary-container/20 text-secondary font-label-sm text-label-sm font-bold uppercase">Online</span>
+</div>
+<div class="space-y-1.5">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Allocated: 328.6 GB</span>
+<span class="text-primary font-mono font-semibold">51.4 GB free</span>
+</div>
+<div class="h-2 w-full bg-surface-container-lowest rounded-full overflow-hidden flex">
+<div class="bg-primary-container h-full rounded-full" style="width: 86.4%"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-outline text-label-sm pt-1">
+<span class="flex items-center gap-1 font-mono"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Direct I/O SAF</span>
+<span>ext4 · POSIX locks</span>
+</div>
+</div>
+<!-- Storage Node 2: Micro-SD exFAT -->
+<div class="lg:col-span-4 bg-surface-container-low p-space-md rounded-xl flex flex-col justify-between gap-space-md shadow-lg relative overflow-hidden">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-tertiary-fixed-dim">
+<span class="material-symbols-outlined text-[20px]">sd_card</span>
+</div>
+<div>
+<div class="font-label-lg text-label-lg text-primary">Micro-SD Expansion</div>
+<div class="font-label-sm text-label-sm text-outline font-mono truncate">/Volumes/SD_Card/Audiobooks</div>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-secondary-container/20 text-secondary font-label-sm text-label-sm font-bold uppercase">Ready</span>
+</div>
+<div class="space-y-1.5">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Allocated: 219.2 GB</span>
+<span class="text-tertiary-fixed-dim font-mono font-semibold">32.8 GB free</span>
+</div>
+<div class="h-2 w-full bg-surface-container-lowest rounded-full overflow-hidden flex">
+<div class="bg-tertiary-fixed-dim h-full rounded-full" style="width: 87.0%"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-outline text-label-sm pt-1">
+<span class="flex items-center gap-1 font-mono"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>VFS Mount Link</span>
+<span>exFAT · 130 MB/s</span>
+</div>
+</div>
+<!-- Combined Space Gauge & VFS Pool Readout -->
+<div class="lg:col-span-4 bg-surface-container-high p-space-md rounded-xl flex items-center justify-between gap-space-md shadow-xl">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Consolidated Pool Space</span>
+<div class="flex items-baseline gap-2">
+<span class="font-timecode-display text-timecode-display text-primary">84.2</span>
+<span class="font-headline-md text-headline-md text-primary-container">GB Free</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">34 Tome folders indexed across 2 physical storage mounts.</p>
+</div>
+<!-- Gauge Circular SVG Graphic -->
+<div class="relative w-20 h-20 shrink-0">
+<svg class="w-20 h-20 transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container-lowest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="86.6, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+<span class="font-label-md text-label-md font-bold text-primary">86.6%</span>
+<span class="font-label-sm text-[9px] uppercase text-outline">Used</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Storage Optimizer Transcoder Banner -->
+<section class="bg-surface-container-low rounded-xl p-space-md lg:p-space-lg flex flex-col lg:flex-row items-center justify-between gap-space-md shadow-lg relative overflow-hidden">
+<div class="flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary-container shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[28px]">speed</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-headline-md text-primary">Opus Neural Audio Recoder</span>
+<span class="px-2 py-0.5 rounded bg-primary-container/20 text-primary-container font-label-sm text-label-sm uppercase font-bold">Smart Optimization</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+          Batch transcode uncompressed / high-bitrate MP3 files to voice-tuned Opus (64 kbps VBR). Reclaim <span class="text-primary font-semibold">~18.4 GB</span> with zero perceptual sibilance loss and preserves existing sidecar offset tags.
+        </p>
+<div class="flex flex-wrap items-center gap-space-md mt-1">
+<span class="flex items-center gap-1.5 text-secondary font-label-sm text-label-sm font-mono">
+<span class="material-symbols-outlined text-[15px]">battery_charging_full</span> Power Gate: AC Connected (100%)
+          </span>
+<span class="flex items-center gap-1.5 text-outline text-label-sm font-mono">
+<span class="material-symbols-outlined text-[15px]">verified_user</span> Safe In-Place Swap (.sabp hash verified)
+          </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0 w-full lg:w-auto justify-end">
+<button class="px-space-md py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-label-lg font-label-lg transition-colors">
+        Configure Profiles
+      </button>
+<button class="flex items-center gap-2 px-space-lg py-2.5 rounded-lg bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container font-label-lg text-label-lg font-bold shadow-md transition-all active:translate-y-0.5">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+<span>Optimize All (4 Eligible)</span>
+</button>
+</div>
+</section>
+<!-- Filter & Lifecycle Tabs Strip -->
+<section class="flex flex-col md:flex-row items-center justify-between gap-space-md">
+<!-- Segmented Tabs -->
+<div class="flex items-center p-1 bg-surface-container-lowest rounded-xl w-full md:w-auto overflow-x-auto shadow-inner">
+<button class="lifecycle-tab flex items-center gap-2 px-space-md py-2 rounded-lg bg-surface-container text-primary font-label-lg text-label-lg font-semibold shadow-sm transition-all" data-tab="started">
+<span>Started</span>
+<span class="px-1.5 py-0.2 rounded-full bg-primary-container text-on-primary-container text-label-sm font-bold">3</span>
+</button>
+<button class="lifecycle-tab flex items-center gap-2 px-space-md py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg transition-all" data-tab="new">
+<span>New</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container text-outline text-label-sm">8</span>
+</button>
+<button class="lifecycle-tab flex items-center gap-2 px-space-md py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg transition-all" data-tab="finished">
+<span>Finished</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container text-outline text-label-sm">19</span>
+</button>
+<button class="lifecycle-tab flex items-center gap-2 px-space-md py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg transition-all" data-tab="queue">
+<span>Queue</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container text-outline text-label-sm">4</span>
+</button>
+</div>
+<!-- Secondary Utilities: Sort & Sidecar Export -->
+<div class="flex items-center gap-space-sm w-full md:w-auto justify-end">
+<!-- Sort Select Styled Box -->
+<div class="relative flex items-center bg-surface-container-low rounded-lg px-3 py-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-outline mr-1.5">sort</span>
+<span class="font-label-sm text-label-sm text-outline mr-2 uppercase">Sort:</span>
+<select class="bg-transparent text-primary font-label-lg text-label-lg focus:outline-none cursor-pointer">
+<option class="bg-surface-container-high text-on-surface" value="last_listened">Last Listened</option>
+<option class="bg-surface-container-high text-on-surface" value="title">Book Title</option>
+<option class="bg-surface-container-high text-on-surface" value="author">Author Name</option>
+<option class="bg-surface-container-high text-on-surface" value="duration">Duration Left</option>
+<option class="bg-surface-container-high text-on-surface" value="size">Filesystem Size</option>
+</select>
+</div>
+<button class="flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-lg text-label-lg transition-all active:translate-y-0.5" id="btn-export-sidecars">
+<span class="material-symbols-outlined text-[16px] text-primary-container">file_download</span>
+<span>Export .sabp Sidecars</span>
+</button>
+</div>
+</section>
+<!-- Main Content Layout: Audiobooks Master Table + Sidecar Inspector Drawer -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- Audiobook Deep Workstation Cards / Rows -->
+<div class="xl:col-span-8 flex flex-col gap-space-md">
+<!-- Item 1: The Way of Kings -->
+<article class="bg-surface-container-low hover:bg-surface-container rounded-xl p-space-md transition-all shadow-md group">
+<div class="flex flex-col sm:flex-row gap-space-md items-start">
+<!-- Cover Art Plate -->
+<div class="relative w-28 h-36 shrink-0 rounded-lg overflow-hidden shadow-lg bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Dark dramatic leatherbound book cover for epic high fantasy novel with cracked obsidian stone texture, subtle amber runic filigree, moody studio lighting on audio workstation desk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPM2IiAktJq0CRoXuZQtKV_mB0WXa9sjAjgAnYu7Kwh24QwsuHbFSp3bxdpKNZDxz7ag5MXpDGC8b-I_y6fYdFO55DGCWJ1jxgnc_flz_oSyIKUUm5G8fzXj9QvGz93IiZ-gcK_OihZ7LeoRS8GSdCtNA1AUFAqs6pAa9iv4Fz10St9xRsVE3qJO-gvYidKts1qeVux4lY7ik681uAK9slOjt4rpx14R-5leZPr1pMHimydUn1qcuI"/>
+<div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 font-mono text-[10px] text-primary-container font-bold">
+              45 MP3s
+            </div>
+</div>
+<!-- Metadata & Telemetry Body -->
+<div class="flex-1 min-w-0 flex flex-col justify-between self-stretch">
+<div>
+<div class="flex items-start justify-between gap-space-sm">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary group-hover:text-primary-container transition-colors truncate">
+                    The Way of Kings
+                  </h3>
+<div class="font-label-lg text-label-lg text-on-surface-variant flex items-center gap-2">
+<span>Brandon Sanderson</span>
+<span class="text-outline">·</span>
+<span class="text-outline">Michael Kramer, Kate Reading</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 rounded-full bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container flex items-center justify-center shadow-lg active:translate-y-0.5 transition-all" title="Play Immediately">
+<span class="material-symbols-outlined text-[24px]">play_arrow</span>
+</button>
+<button class="w-9 h-9 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center" title="Folder Operations">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Progress Bar Track -->
+<div class="mt-3 space-y-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-primary font-mono font-medium">44% complete</span>
+<span class="text-on-surface-variant font-mono">14h 22m remaining of 45h 38m</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 44%"></div>
+</div>
+</div>
+</div>
+<!-- Deep Desktop Metadata Chips & Sidecar Pill Status -->
+<div class="mt-4 pt-3 flex flex-wrap items-center justify-between gap-2 border-t-0">
+<div class="flex flex-wrap items-center gap-2">
+<!-- Sidecar: Position -->
+<span class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-secondary text-label-sm font-mono" title="SHA-256 Checksum Verified">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+<span>position.sabp.dat</span>
+</span>
+<!-- Sidecar: Cast -->
+<span class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-tertiary-fixed-dim text-label-sm font-mono" title="Character Cast Ledger">
+<span class="material-symbols-outlined text-[13px]">group</span>
+<span>characters.xml (42)</span>
+</span>
+<!-- Sidecar: Bookmarks -->
+<span class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-primary-container text-label-sm font-mono" title="Acoustic Bookmarks">
+<span class="material-symbols-outlined text-[13px]">bookmark</span>
+<span>bookmarks.xml (14)</span>
+</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline font-mono">1.28 GB · /Volumes/Storage/...</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Item 2: Project Hail Mary -->
+<article class="bg-surface-container-low hover:bg-surface-container rounded-xl p-space-md transition-all shadow-md group">
+<div class="flex flex-col sm:flex-row gap-space-md items-start">
+<!-- Cover Art Plate -->
+<div class="relative w-28 h-36 shrink-0 rounded-lg overflow-hidden shadow-lg bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Minimalist sci-fi book cover featuring a lonely retro starship in deep space approaching a luminous alien sun with warm amber solar flares and dark charcoal space background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEVjn2SzgUS91xExXG6E95VcP7xZEoRMOiH2Qm8E-9vAGMoAfD2YMcV29PyAJT2fcHqSbOkEh8Hw5CuyZkGO8arDhiWw9sBqbxtYzkZzzZZyLVSgPQwhiwZ8ZQ8XJ9d3myjjOMj78dVj-x93UgIGhJLvomvTKVfOyJWCayvpfeYw-CZOn2V-YktrQbWN1vXUzHxfXrs76Wtv6OPGxU3ulTme1lR4f3mltn4oFAxQh8BYtlKUF0R24E"/>
+<div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 font-mono text-[10px] text-tertiary-fixed-dim font-bold">
+              Single M4B
+            </div>
+</div>
+<!-- Metadata & Telemetry Body -->
+<div class="flex-1 min-w-0 flex flex-col justify-between self-stretch">
+<div>
+<div class="flex items-start justify-between gap-space-sm">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline-md text-headline-md text-primary group-hover:text-primary-container transition-colors truncate">
+                      Project Hail Mary
+                    </h3>
+<span class="px-1.5 py-0.5 rounded bg-tertiary-container/30 text-tertiary font-label-sm text-[10px] font-mono">CHAPTER MARKS</span>
+</div>
+<div class="font-label-lg text-label-lg text-on-surface-variant flex items-center gap-2">
+<span>Andy Weir</span>
+<span class="text-outline">·</span>
+<span class="text-outline">Ray Porter</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 rounded-full bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container flex items-center justify-center shadow-lg active:translate-y-0.5 transition-all" title="Play Immediately">
+<span class="material-symbols-outlined text-[24px]">play_arrow</span>
+</button>
+<button class="w-9 h-9 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center" title="Folder Operations">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Progress Bar Track -->
+<div class="mt-3 space-y-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-primary font-mono font-medium">78% complete</span>
+<span class="text-on-surface-variant font-mono">2h 15m remaining of 16h 10m</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 78%"></div>
+</div>
+</div>
+</div>
+<!-- Deep Metadata Chips & DSP Telemetry -->
+<div class="mt-4 pt-3 flex flex-wrap items-center justify-between gap-2">
+<div class="flex flex-wrap items-center gap-2">
+<!-- DSP Hardware Preset Profile Tag -->
+<span class="flex items-center gap-1 px-2 py-0.5 rounded bg-secondary-container/20 text-secondary text-label-sm font-mono">
+<span class="material-symbols-outlined text-[13px]">graphic_eq</span>
+<span>DSP: +4.0dB Voice · 1.25× Tempo</span>
+</span>
+<span class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-outline text-label-sm font-mono">
+<span class="material-symbols-outlined text-[13px]">verified</span>
+<span>position.sabp.dat</span>
+</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline font-mono">486 MB · /Volumes/SD_Card/...</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Item 3: Dune -->
+<article class="bg-surface-container-low hover:bg-surface-container rounded-xl p-space-md transition-all shadow-md group">
+<div class="flex flex-col sm:flex-row gap-space-md items-start">
+<!-- Cover Art Plate -->
+<div class="relative w-28 h-36 shrink-0 rounded-lg overflow-hidden shadow-lg bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Monolithic desert dunes under twin moons, deep spice amber dunes with crisp shadows and dark starlit sky, book cover presentation for classic science fiction masterpiece" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoNnCdcu8NNaCRbChA9dPWuU7dJmtmDzjzZnw3hbBiQZTlsmpdCXNm85taWKHk2zAh30n0bzRDM6nLS2xHPXbM1Sj0uQk4hSubNWGWuLunmDdsP2nnwEsp4j3ou_CUlCEsT6RaikmzcyjtOu48_T5M-PHLkoZMAMipSxWs4BJEx3oS-5pHVoeufIbsXsAcWvU1KQFJWPrR7oUUBp-uRX12x23-zyjdp1vDtKxC0H_8JKq_zJZy6pBx"/>
+<div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-secondary-container/90 font-mono text-[10px] text-on-secondary font-bold">
+              28 Opus
+            </div>
+</div>
+<!-- Metadata & Telemetry Body -->
+<div class="flex-1 min-w-0 flex flex-col justify-between self-stretch">
+<div>
+<div class="flex items-start justify-between gap-space-sm">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline-md text-headline-md text-primary group-hover:text-primary-container transition-colors truncate">
+                      Dune
+                    </h3>
+<span class="px-1.5 py-0.5 rounded bg-secondary-container/30 text-secondary font-label-sm text-[10px] font-mono">OPTIMIZED</span>
+</div>
+<div class="font-label-lg text-label-lg text-on-surface-variant flex items-center gap-2">
+<span>Frank Herbert</span>
+<span class="text-outline">·</span>
+<span class="text-outline">Full Cast Production</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 rounded-full bg-primary-container hover:bg-primary-fixed-dim text-on-primary-container flex items-center justify-center shadow-lg active:translate-y-0.5 transition-all" title="Play Immediately">
+<span class="material-symbols-outlined text-[24px]">play_arrow</span>
+</button>
+<button class="w-9 h-9 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center" title="Folder Operations">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Progress Bar Track -->
+<div class="mt-3 space-y-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-primary font-mono font-medium">12% complete</span>
+<span class="text-on-surface-variant font-mono">18h 40m remaining of 21h 05m</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 12%"></div>
+</div>
+</div>
+</div>
+<!-- Deep Metadata Chips & Optimization Readout -->
+<div class="mt-4 pt-3 flex flex-wrap items-center justify-between gap-2">
+<div class="flex flex-wrap items-center gap-2">
+<span class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-secondary text-label-sm font-mono">
+<span class="material-symbols-outlined text-[13px]">compress</span>
+<span>Recoded: 64kbps CBR (Saved 1.84 GB)</span>
+</span>
+<span class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-outline text-label-sm font-mono">
+<span class="material-symbols-outlined text-[13px]">badge</span>
+<span>characters.xml (18)</span>
+</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline font-mono">592 MB · /Volumes/Storage/...</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Item 4: The Name of the Wind -->
+<article class="bg-surface-container-low hover:bg-surface-container rounded-xl p-space-md transition-all shadow-md group">
+<div class="flex flex-col sm:flex-row gap-space-md items-start">
+<!-- Cover Art Plate -->
+<div class="relative w-28 h-36 shrink-0 rounded-lg overflow-hidden shadow-lg bg-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Intricate lute hanging on an old tavern wooden wall illuminated by warm hearthfire embers, fantasy novel audio edition cover, rich rustic dark colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU3akJSGpvqeVMpJJU54s5JH2sQuP60EvX1WvXSkmyAqzKnv-FTVpqKox7Kd8v29QSW2-__q9y0dNQduDyPylsfvX-c_Zsz2mU2eBMiJ4c-gTO9AI0wIXHffQ3xUK2-uAZ7086ZvF1jV7w6zCiAQB-1-kk16VdAp--0cpZ5UJJfjrjFlqxau9B62LceiFjJQJWJQ89wSk_36co0VKWxLjsty_nh268Fcd8SdYqg8ue5S0FCo76nktn"/>
+<div class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-primary-container font-mono text-[10px] text-on-primary-container font-bold">
+              UNPLAYED
+            </div>
+<div class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 font-mono text-[10px] text-outline font-bold">
+              36 Tracks
+            </div>
+</div>
+<!-- Metadata & Telemetry Body -->
+<div class="flex-1 min-w-0 flex flex-col justify-between self-stretch">
+<div>
+<div class="flex items-start justify-between gap-space-sm">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary group-hover:text-primary-container transition-colors truncate">
+                    The Name of the Wind
+                  </h3>
+<div class="font-label-lg text-label-lg text-on-surface-variant flex items-center gap-2">
+<span>Patrick Rothfuss</span>
+<span class="text-outline">·</span>
+<span class="text-outline">Nick Podehl</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 rounded-full bg-surface-container-highest hover:bg-primary-container text-primary hover:text-on-primary-container flex items-center justify-center shadow-lg active:translate-y-0.5 transition-all" title="Start Playback">
+<span class="material-symbols-outlined text-[24px]">play_arrow</span>
+</button>
+<button class="w-9 h-9 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center" title="Folder Operations">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Progress Bar Track (New/0%) -->
+<div class="mt-3 space-y-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-outline font-mono font-medium">New (0% played)</span>
+<span class="text-on-surface-variant font-mono">27h 55m total</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="bg-outline h-full rounded-full opacity-30" style="width: 0%"></div>
+</div>
+</div>
+</div>
+<!-- Deep Metadata Chips -->
+<div class="mt-4 pt-3 flex flex-wrap items-center justify-between gap-2">
+<div class="flex flex-wrap items-center gap-2">
+<span class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant text-label-sm font-mono">
+<span class="material-symbols-outlined text-[13px]">folder_zip</span>
+<span>Sidecars Initialized (.sabp)</span>
+</span>
+<span class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-tertiary-fixed-dim text-label-sm font-mono">
+<span class="material-symbols-outlined text-[13px]">tune</span>
+<span>DSP Default Profile</span>
+</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline font-mono">812 MB · /Volumes/Storage/...</span>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Inspector Side Panel: Active Sidecar Health & Folder VFS Inspector -->
+<aside class="xl:col-span-4 bg-surface-container-low p-space-lg rounded-xl flex flex-col gap-space-lg shadow-xl sticky top-14">
+<!-- Section Header -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[20px]">health_and_safety</span>
+<h4 class="font-headline-md text-headline-md text-primary">Sidecar Health</h4>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-secondary text-label-sm font-mono font-bold">100% PASS</span>
+</div>
+<!-- Focused Tome Detail -->
+<div class="p-space-md rounded-lg bg-surface-container flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Selected Tome</span>
+<span class="font-label-sm text-label-sm text-secondary font-mono">IN SYNCH</span>
+</div>
+<div class="font-headline-sm text-primary font-semibold">The Way of Kings</div>
+<div class="font-mono text-label-sm text-on-surface-variant break-all">
+          /Volumes/Storage/Audiobooks/Brandon_Sanderson/Way_of_Kings/
+        </div>
+<div class="flex items-center gap-2 pt-2">
+<button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded bg-surface-container-high hover:bg-surface-bright text-on-surface text-label-sm font-label-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">folder_open</span>
+<span>Open System Folder</span>
+</button>
+<button class="p-1.5 rounded bg-surface-container-high hover:bg-surface-bright text-tertiary-fixed-dim" title="Verify SHA hashes">
+<span class="material-symbols-outlined text-[16px]">fingerprint</span>
+</button>
+</div>
+</div>
+<!-- Sidecar Integrity List -->
+<div class="flex flex-col gap-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Active Sidecar Descriptors</span>
+<div class="flex flex-col gap-2">
+<!-- descriptor 1 -->
+<div class="p-2.5 rounded-lg bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-secondary text-[18px]">lock_reset</span>
+<div class="flex flex-col">
+<span class="font-mono text-label-sm text-primary font-bold">position.sabp.dat</span>
+<span class="font-body-sm text-body-sm text-outline">Offset: 14h 22m 18s (File 20)</span>
+</div>
+</div>
+<span class="text-secondary font-label-sm text-label-sm font-mono">VALID</span>
+</div>
+<!-- descriptor 2 -->
+<div class="p-2.5 rounded-lg bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary-container text-[18px]">account_tree</span>
+<div class="flex flex-col">
+<span class="font-mono text-label-sm text-primary font-bold">characters.sabp.xml</span>
+<span class="font-body-sm text-body-sm text-outline">Kaladin, Dalinar, Shallan +39</span>
+</div>
+</div>
+<span class="text-primary-container font-label-sm text-label-sm font-mono">42 ENTRIES</span>
+</div>
+<!-- descriptor 3 -->
+<div class="p-2.5 rounded-lg bg-surface-container-lowest flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[18px]">label_important</span>
+<div class="flex flex-col">
+<span class="font-mono text-label-sm text-primary font-bold">bookmarks.sabp.xml</span>
+<span class="font-body-sm text-body-sm text-outline">14 user bookmarks + audio memos</span>
+</div>
+</div>
+<span class="text-tertiary-fixed-dim font-label-sm text-label-sm font-mono">14 MARKS</span>
+</div>
+</div>
+</div>
+<!-- Sidecar Quick Actions Banner -->
+<div class="bg-surface-container p-space-md rounded-lg flex flex-col gap-2">
+<div class="flex items-center gap-2 text-primary font-label-lg text-label-lg">
+<span class="material-symbols-outlined text-primary-container text-[18px]">cloud_sync</span>
+<span>Zero-Cloud Sidecar Portability</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          FolderPlay stores listening bookmarks, equalizer profiles, and narrator character databases strictly adjacent to audio files as human-readable XML and binary position indices. Never tied to vendor DRM accounts.
+        </p>
+<div class="pt-2 flex items-center justify-between">
+<button class="text-primary-container hover:underline font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span>Read Sidecar Specification</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<script>
+  // Simple micro-interactions for lifecycle filter tabs
+  document.querySelectorAll('.lifecycle-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.lifecycle-tab').forEach(t => {
+        t.classList.remove('bg-surface-container', 'text-primary', 'font-semibold', 'shadow-sm');
+        t.classList.add('text-on-surface-variant');
+      });
+      tab.classList.add('bg-surface-container', 'text-primary', 'font-semibold', 'shadow-sm');
+      tab.classList.remove('text-on-surface-variant');
+    });
+  });
+
+  // Rescan simulation button
+  const rescanBtn = document.getElementById('btn-scan');
+  if (rescanBtn) {
+    rescanBtn.addEventListener('click', () => {
+      const icon = rescanBtn.querySelector('.material-symbols-outlined');
+      if (icon) {
+        icon.classList.add('animate-spin');
+        setTimeout(() => {
+          icon.classList.remove('animate-spin');
+        }, 1200);
+      }
+    });
+  }
+</script></main></div><footer class="fixed bottom-0 left-0 right-0 h-8 bg-surface-container-lowest z-50 flex items-center justify-between px-space-md shadow-[0_-1px_8px_rgba(0,0,0,0.5)]"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary-container"></span><span class="font-label-sm text-label-sm text-on-surface">BASS Engine Core v2.4</span></div><div class="flex items-center gap-1.5 text-on-surface-variant"><span class="material-symbols-outlined text-[14px] text-primary-container">neurology</span><span class="font-label-sm text-label-sm">RNNoise Neural Filter: Lock Active</span></div><div class="hidden sm:flex items-center gap-1.5 text-on-surface-variant"><span class="material-symbols-outlined text-[14px] text-tertiary-fixed-dim">waves</span><span class="font-label-sm text-label-sm">PCM 44.1kHz · 24-bit · Clean ASIO</span></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-1.5 text-on-surface-variant"><span class="material-symbols-outlined text-[14px]">database</span><span class="font-label-sm text-label-sm">/Volumes/AudioTome (Local Fast Storage)</span></div><div class="flex items-center gap-1 text-secondary"><span class="material-symbols-outlined text-[14px]">bolt</span><span class="font-label-sm text-label-sm">0.8ms DAC</span></div></div></footer></body></html>

@@ -1,0 +1,6 @@
+{
+  "name": "FolderPlay - Offline Audiobook Studio",
+  "description": "Clean-room offline folder-based audiobook player with pause-proportional auto-rewind, touchless shake-to-reset sleep timer, RNNoise speech DSP, and local sidecar metadata.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

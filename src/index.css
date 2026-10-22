@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-serif: 'Literata', Georgia, serif;
+    --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    
+    /* Default: OLED Nocturne */
+    --bg-base: #070a0e;
+    --bg-surface-lowest: #090f16;
+    --bg-surface-low: #121820;
+    --bg-surface: #1a2028;
+    --bg-surface-high: #242a33;
+    --bg-surface-highest: #2f353e;
+    
+    --primary: #fff2d6;
+    --primary-container: #fcd34d;
+    --primary-glow: rgba(252, 211, 77, 0.25);
+    
+    --secondary: #10b981;
+    --secondary-container: #00a572;
+    --tertiary: #06b6d4;
+    --tertiary-dim: #4cd7f6;
+    
+    --text-high: #f3f4f6;
+    --text-medium: #dde3ee;
+    --text-muted: #8f9cae;
+    --border-subtle: #283342;
+    --border-highlight: rgba(255, 255, 255, 0.08);
+  }
+
+  [data-theme="leatherbound"] {
+    --bg-base: #140d0a;
+    --bg-surface-lowest: #1a110c;
+    --bg-surface-low: #241812;
+    --bg-surface: #30211a;
+    --bg-surface-high: #3d2b22;
+    --bg-surface-highest: #4b362c;
+    
+    --primary: #faeccd;
+    --primary-container: #e6b865;
+    --primary-glow: rgba(230, 184, 101, 0.3);
+    
+    --secondary: #34d399;
+    --secondary-container: #059669;
+    --tertiary: #fb923c;
+    --tertiary-dim: #fdba74;
+    
+    --text-high: #fef7ea;
+    --text-medium: #e8dbcf;
+    --text-muted: #a69285;
+    --border-subtle: #4a362b;
+    --border-highlight: rgba(255, 235, 205, 0.1);
+  }
+
+  [data-theme="nordic"] {
+    --bg-base: #0b1118;
+    --bg-surface-lowest: #0e1620;
+    --bg-surface-low: #15202e;
+    --bg-surface: #1d2c3e;
+    --bg-surface-high: #26384f;
+    --bg-surface-highest: #324762;
+    
+    --primary: #f0fdfa;
+    --primary-container: #38bdf8;
+    --primary-glow: rgba(56, 189, 248, 0.3);
+    
+    --secondary: #2dd4bf;
+    --secondary-container: #0d9488;
+    --tertiary: #a78bfa;
+    --tertiary-dim: #c4b5fd;
+    
+    --text-high: #ffffff;
+    --text-medium: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border-subtle: #2b3e55;
+    --border-highlight: rgba(255, 255, 255, 0.12);
+  }
+
+  [data-theme="solar"] {
+    --bg-base: #050505;
+    --bg-surface-lowest: #0c0c0c;
+    --bg-surface-low: #161616;
+    --bg-surface: #222222;
+    --bg-surface-high: #2e2e2e;
+    --bg-surface-highest: #3b3b3b;
+    
+    --primary: #ffffff;
+    --primary-container: #f59e0b;
+    --primary-glow: rgba(245, 158, 11, 0.35);
+    
+    --secondary: #10b981;
+    --secondary-container: #059669;
+    --tertiary: #38bdf8;
+    --tertiary-dim: #7dd3fc;
+    
+    --text-high: #ffffff;
+    --text-medium: #f3f4f6;
+    --text-muted: #9ca3af;
+    --border-subtle: #3a3a3a;
+    --border-highlight: rgba(255, 255, 255, 0.15);
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-medium);
+    font-family: var(--font-sans);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-surface-lowest);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Tactile hardware button effects */
+.hardware-plate {
+  background-color: var(--bg-surface-low);
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 0 1px 0 var(--border-highlight), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.hardware-plate-raised {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 0 1px 0 var(--border-highlight), 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+
+.hardware-plate-inset {
+  background-color: var(--bg-surface-lowest);
+  border: 1px solid var(--border-subtle);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.tactile-btn {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tactile-btn:active {
+  transform: translateY(1.5px) scale(0.98);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}

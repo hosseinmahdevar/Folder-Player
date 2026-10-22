@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400..72&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#0e141c;color:#dde3ee;}body{overscroll-behavior:none;font-family:'Manrope',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface": "#0e141c", "on-secondary-container": "#00311f", "inverse-primary": "#735c00", "background": "#0e141c", "outline": "#99907b", "on-surface-variant": "#d0c6ae", "tertiary-fixed-dim": "#4cd7f6", "error-container": "#93000a", "on-primary": "#3c2f00", "primary": "#fff2d6", "secondary-fixed": "#6ffbbe", "surface-container-high": "#242a33", "surface-bright": "#343a42", "surface-variant": "#2f353e", "on-secondary-fixed-variant": "#005236", "surface-container-highest": "#2f353e", "inverse-on-surface": "#2b3139", "surface-container-low": "#161c24", "on-tertiary-container": "#006678", "primary-fixed": "#ffe086", "tertiary": "#dff7ff", "on-background": "#dde3ee", "on-surface": "#dde3ee", "surface-tint": "#eac33e", "error": "#ffb4ab", "surface-container-lowest": "#090f16", "tertiary-fixed": "#acedff", "on-error": "#690005", "secondary-fixed-dim": "#4edea3", "on-tertiary-fixed-variant": "#004e5c", "on-tertiary-fixed": "#001f26", "secondary": "#4edea3", "surface-container": "#1a2028", "on-error-container": "#ffdad6", "on-primary-fixed-variant": "#574500", "secondary-container": "#00a572", "on-secondary-fixed": "#002113", "on-tertiary": "#003640", "on-primary-container": "#715b00", "on-secondary": "#003824", "surface-dim": "#0e141c", "outline-variant": "#4d4635", "on-primary-fixed": "#231b00", "inverse-surface": "#dde3ee", "primary-container": "#fcd34d", "primary-fixed-dim": "#eac33e", "tertiary-container": "#7fe5ff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "margin": "1.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "gutter-mobile": "0.75rem", "space-xl": "2.25rem", "gutter": "1rem", "margin-mobile": "1rem", "space-2xl": "3.5rem", "space-sm": "0.5rem", "space-md": "1rem" }, "fontFamily": { "headline-xl-mobile": ["Literata"], "headline-lg-mobile": ["Literata"], "body-lg": ["Manrope"], "body-md": ["Manrope"], "headline-xl": ["Literata"], "timecode-display": ["Manrope"], "body-sm": ["Manrope"], "headline-lg": ["Literata"], "label-md": ["Manrope"], "headline-md": ["Literata"], "label-sm": ["Manrope"], "label-lg": ["Manrope"] }, "fontSize": { "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "500" }], "body-lg": ["17px", { "lineHeight": "26px", "fontWeight": "400" }], "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "timecode-display": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.03em", "fontWeight": "700" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "500" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "500" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "700" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface text-on-surface flex flex-col min-h-screen selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.5)]"><div class="h-16 px-space-md flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="FolderPlay Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGwldUBbnNmkySy_qQNjEc4b6fpYFgiN61lSgUa6GYX41B78hC_P7mkj4N9pKmwE8duaUWS90g31iHCcw2VVFb0KeDYJwU-SCOXIE4hfptVlcduAXVZGiEKlEBwmTdC0Kyz4OFnEr6WHm0lRmn6IPo69SAsCzI1s6qAeLElvaDbq1lVcf0KQ9wd_is9h2vKWtJjvbG4fNaNW9_lXiEiZZsY8NKphj5916jgkDWsoQpVF3god3WzJIQ"/><div class="flex flex-col"><div class="flex items-center gap-1.5"><span class="font-headline-md text-headline-md font-medium text-primary tracking-tight leading-none">FolderPlay</span><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-highest text-secondary-fixed-dim uppercase tracking-wider font-bold">DSP+</span></div><div class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-[13px] text-primary-container">folder_open</span><span class="font-label-sm text-label-sm truncate max-w-[120px]">/storage/Audiobooks</span></div></div></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container-high"><span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed animate-pulse"></span><span class="font-label-sm text-label-sm text-secondary-fixed-dim">RNN ON</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-surface"><div class="flex flex-col w-full px-space-md space-y-space-lg pb-12">
+<!-- System / Environmental Telemetry Badge -->
+<div class="flex items-center justify-between bg-surface-container-low px-space-md py-space-sm rounded-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">directions_car</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">Android Auto Mode</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant leading-none">Vehicle Disconnected • Sleep Active</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 px-2 py-1 rounded-full bg-surface-container-high">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-secondary-fixed-dim">INHIBIT DISENGAGED</span>
+</div>
+</div>
+<!-- Bedtime Sleep Timer Section -->
+<section class="flex flex-col space-y-space-md bg-surface-container rounded-xl p-space-md shadow-xl">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[22px]">bedtime</span>
+<h2 class="font-headline-md text-headline-md text-primary">Bedtime Sleep Timer</h2>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface-container-highest text-secondary-fixed-dim">30M TARGET</span>
+</div>
+<!-- Circular Dial Mechanical Display -->
+<div class="flex flex-col items-center justify-center py-2 relative">
+<div class="relative w-48 h-48 flex items-center justify-center">
+<!-- SVG Radial Track -->
+<svg class="w-full h-full -rotate-90 transform" viewbox="0 0 100 100">
+<circle class="text-surface-container-highest opacity-40" cx="50" cy="50" fill="transparent" r="42" stroke="currentColor" stroke-width="6"></circle>
+<!-- 62.5% remaining for 18:45 / 30:00 -->
+<circle class="text-primary-container drop-shadow-[0_0_8px_rgba(252,211,77,0.4)] transition-all duration-700" cx="50" cy="50" fill="transparent" r="42" stroke="currentColor" stroke-dasharray="263.89" stroke-dashoffset="98.96" stroke-linecap="round" stroke-width="6"></circle>
+</svg>
+<!-- Mechanical Core Hub -->
+<div class="absolute inset-4 rounded-full bg-surface-container-low flex flex-col items-center justify-center shadow-[inset_0_2px_8px_rgba(0,0,0,0.8)]">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-0.5">Time Remaining</span>
+<span class="font-timecode-display text-timecode-display text-primary tracking-tight font-bold" id="countdown-val">18:45</span>
+<div class="flex items-center gap-1.5 mt-1 text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>
+<span class="font-label-sm text-label-sm tracking-wide text-secondary-fixed-dim">FADE ENGAGED</span>
+</div>
+</div>
+</div>
+<!-- Dial Micro-action -->
+<div class="flex items-center gap-3 mt-3">
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-high text-primary hover:bg-surface-bright active:scale-95 transition-transform text-label-sm font-label-sm shadow-md" id="add-five-btn">
+<span class="material-symbols-outlined text-[15px]">add</span> +5m Extension
+        </button>
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant hover:text-error active:scale-95 transition-transform text-label-sm font-label-sm shadow-md" id="cancel-timer-btn">
+<span class="material-symbols-outlined text-[15px]">close</span> Cancel
+        </button>
+</div>
+</div>
+<!-- Duration Preset Chips -->
+<div class="flex flex-col space-y-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Presets</span>
+<div class="flex flex-wrap gap-2">
+<button class="preset-btn px-3 py-2 rounded bg-surface-container-low text-on-surface font-label-md text-label-md active:bg-surface-bright">5m</button>
+<button class="preset-btn px-3 py-2 rounded bg-surface-container-low text-on-surface font-label-md text-label-md active:bg-surface-bright">10m</button>
+<button class="preset-btn px-3 py-2 rounded bg-surface-container-low text-on-surface font-label-md text-label-md active:bg-surface-bright">15m</button>
+<button class="preset-btn px-3 py-2 rounded bg-primary-container text-on-primary-container font-label-md text-label-md shadow-[0_0_12px_rgba(252,211,77,0.3)] font-bold">30m</button>
+<button class="preset-btn px-3 py-2 rounded bg-surface-container-low text-on-surface font-label-md text-label-md active:bg-surface-bright">45m</button>
+<button class="preset-btn px-3 py-2 rounded bg-surface-container-low text-on-surface font-label-md text-label-md active:bg-surface-bright">60m</button>
+<button class="preset-btn px-3 py-2 rounded bg-surface-container-low text-on-surface font-label-md text-label-md active:bg-surface-bright">End of Chapter</button>
+<button class="preset-btn px-3 py-2 rounded bg-surface-container-low text-on-surface font-label-md text-label-md active:bg-surface-bright">End of File</button>
+</div>
+</div>
+<!-- Shake-to-Reset Hardware Sub-Panel -->
+<div class="bg-surface-container-low rounded-xl p-space-md space-y-space-md shadow-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[20px]">screen_rotation</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-primary font-semibold">Shake-to-Reset</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Reset countdown with bedside gesture</span>
+</div>
+</div>
+<!-- Hardware Style Toggle Switch -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="shake-toggle" type="checkbox"/>
+<div class="w-12 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-primary-container after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary-container"></div>
+</label>
+</div>
+<!-- Sensitivity Calibration Slider -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-center text-label-sm font-label-sm">
+<span class="text-on-surface-variant uppercase tracking-wider">Accelerometer Sensitivity</span>
+<span class="text-secondary font-bold" id="shake-label">Level 6 (Medium wrist shake)</span>
+</div>
+<div class="relative flex items-center py-1">
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary-container" id="shake-slider" max="10" min="1" type="range" value="6"/>
+</div>
+<div class="flex justify-between text-body-sm font-body-sm text-outline">
+<span>Soft Nudge (1)</span>
+<span>Vigorous (10)</span>
+</div>
+</div>
+<!-- Trigger Mode Segmented Selector -->
+<div class="space-y-1.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Operating Window</span>
+<div class="grid grid-cols-2 gap-2 bg-surface-container-highest p-1 rounded-lg">
+<button class="py-1.5 rounded text-center font-label-sm text-label-sm font-bold bg-surface-container text-primary shadow-sm transition-all" id="mode-fadeout">
+            During final 60s fadeout
+          </button>
+<button class="py-1.5 rounded text-center font-label-sm text-label-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all" id="mode-always">
+            Always Active
+          </button>
+</div>
+</div>
+<!-- Gentle volume fadeout & soft chime preview -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[18px]">volume_down</span>
+<span class="font-body-sm text-body-sm text-on-surface">Gentle volume fadeout with chime cue</span>
+</div>
+<button class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high text-primary hover:bg-surface-bright active:scale-95 text-label-sm font-label-sm" id="preview-chime-btn">
+<span class="material-symbols-outlined text-[14px]">play_arrow</span> Preview
+        </button>
+</div>
+</div>
+</section>
+<!-- Sound Shaping & BASS Audio Engine Section -->
+<section class="flex flex-col space-y-space-md bg-surface-container rounded-xl p-space-md shadow-xl">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-fixed-dim text-[22px]">graphic_eq</span>
+<h2 class="font-headline-md text-headline-md text-primary">Sound Shaping (DSP)</h2>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-primary-container font-bold">BASS ENGINE v2.4</span>
+</div>
+<!-- RNNoise Speech De-noising Switch Tile -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex items-center justify-between shadow-sm">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary mt-0.5">
+<span class="material-symbols-outlined text-[22px]">noise_control_off</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg text-primary font-semibold">RNNoise Neural Filter</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded bg-secondary-container text-on-secondary-container font-bold">ACTIVE</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Real-time speech formant enhancement &amp; hiss reduction</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-12 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-secondary peer-checked:after:bg-secondary-fixed peer-checked:bg-on-secondary-fixed-variant after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</label>
+</div>
+<!-- Speed & Pitch Controls (2-Column Tactile Row) -->
+<div class="grid grid-cols-1 gap-space-md">
+<!-- Playback Speed -->
+<div class="bg-surface-container-low rounded-xl p-space-md space-y-2 shadow-sm">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Playback Tempo</span>
+<div class="flex items-center gap-1.5">
+<button class="w-7 h-7 rounded bg-surface-container-high flex items-center justify-center text-primary active:scale-95 shadow" id="tempo-minus">-</button>
+<span class="font-timecode-display text-[20px] leading-tight text-primary-container font-bold w-14 text-center" id="tempo-val">1.25x</span>
+<button class="w-7 h-7 rounded bg-surface-container-high flex items-center justify-center text-primary active:scale-95 shadow" id="tempo-plus">+</button>
+</div>
+</div>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary-container" id="tempo-slider" max="3.0" min="0.5" step="0.05" type="range" value="1.25"/>
+<div class="flex justify-between text-body-sm font-body-sm text-outline">
+<span>0.50x</span>
+<span>Normal (1.00x)</span>
+<span>3.00x</span>
+</div>
+</div>
+<!-- Pitch Control Semitones -->
+<div class="bg-surface-container-low rounded-xl p-space-md space-y-2 shadow-sm">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Pitch Shift</span>
+<div class="flex items-center gap-2">
+<span class="font-timecode-display text-[20px] leading-tight text-primary font-bold" id="pitch-val">0 st</span>
+<button class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant hover:text-on-surface text-label-sm font-label-sm" id="pitch-reset">Reset</button>
+</div>
+</div>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-secondary" id="pitch-slider" max="6" min="-6" step="1" type="range" value="0"/>
+<div class="flex justify-between text-body-sm font-body-sm text-outline">
+<span>-6 st (Deep)</span>
+<span>Neutral (0)</span>
+<span>+6 st (Bright)</span>
+</div>
+</div>
+</div>
+<!-- Hardware Volume Boost & Limiter -->
+<div class="bg-surface-container-low rounded-xl p-space-md space-y-2 shadow-sm">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-1.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Hardware Volume Boost</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" title="Soft clipping limiter active">verified</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-timecode-display text-[20px] leading-tight text-primary-container font-bold" id="boost-val">+6.0 dB</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-high text-secondary-fixed-dim font-bold">LIMITER ON</span>
+</div>
+</div>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary-container" id="boost-slider" max="20" min="0" step="0.5" type="range" value="6"/>
+<div class="flex justify-between text-body-sm font-body-sm text-outline">
+<span>0 dB (Raw)</span>
+<span>+10 dB</span>
+<span>+20 dB (Max)</span>
+</div>
+</div>
+<!-- 5-Band Parametric Equalizer Module -->
+<div class="bg-surface-container-low rounded-xl p-space-md space-y-3 shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">5-Band Vocal EQ Curve</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-highest text-primary-container">Speech Target</span>
+</div>
+<button class="text-label-sm font-label-sm text-secondary hover:underline" id="eq-flat">Flat Preset</button>
+</div>
+<!-- Fader Track Array -->
+<div class="grid grid-cols-5 gap-2 pt-2 pb-1 text-center">
+<!-- 60Hz -->
+<div class="flex flex-col items-center space-y-2">
+<span class="font-label-sm text-label-sm text-primary font-bold text-center">-2dB</span>
+<div class="h-28 flex items-center justify-center">
+<input class="h-28 w-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary-container" max="12" min="-12" orient="vertical" type="range" value="-2"/>
+</div>
+<span class="font-label-sm text-label-sm text-outline">60Hz</span>
+</div>
+<!-- 230Hz -->
+<div class="flex flex-col items-center space-y-2">
+<span class="font-label-sm text-label-sm text-primary font-bold text-center">+1dB</span>
+<div class="h-28 flex items-center justify-center">
+<input class="h-28 w-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary-container" max="12" min="-12" orient="vertical" type="range" value="1"/>
+</div>
+<span class="font-label-sm text-label-sm text-outline">230Hz</span>
+</div>
+<!-- 910Hz -->
+<div class="flex flex-col items-center space-y-2">
+<span class="font-label-sm text-label-sm text-primary-container font-bold text-center">+4dB</span>
+<div class="h-28 flex items-center justify-center">
+<input class="h-28 w-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary-container" max="12" min="-12" orient="vertical" type="range" value="4"/>
+</div>
+<span class="font-label-sm text-label-sm text-secondary-fixed-dim font-bold">910Hz</span>
+</div>
+<!-- 3.6kHz -->
+<div class="flex flex-col items-center space-y-2">
+<span class="font-label-sm text-label-sm text-primary-container font-bold text-center">+3dB</span>
+<div class="h-28 flex items-center justify-center">
+<input class="h-28 w-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary-container" max="12" min="-12" orient="vertical" type="range" value="3"/>
+</div>
+<span class="font-label-sm text-label-sm text-secondary-fixed-dim font-bold">3.6k</span>
+</div>
+<!-- 14kHz -->
+<div class="flex flex-col items-center space-y-2">
+<span class="font-label-sm text-label-sm text-primary font-bold text-center">-1dB</span>
+<div class="h-28 flex items-center justify-center">
+<input class="h-28 w-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary-container" max="12" min="-12" orient="vertical" type="range" value="-1"/>
+</div>
+<span class="font-label-sm text-label-sm text-outline">14kHz</span>
+</div>
+</div>
+</div>
+<!-- Bedtime Mono Mixdown Toggle -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">headphones</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-primary font-semibold">Mono Earbud Mixdown</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Combines L/R channels for single pillow-earbud</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-12 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-primary-container after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary-container"></div>
+</label>
+</div>
+</section>
+<!-- Interactive Feedback Overlay Container -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-surface-container-high text-primary px-4 py-2 rounded-full font-label-sm text-label-sm shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 flex items-center gap-2" id="toast-cue">
+<span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span>
+<span id="toast-msg">Settings saved</span>
+</div>
+</div>
+<script>
+  (function initAudioSleepView() {
+    const toast = document.getElementById('toast-cue');
+    const toastMsg = document.getElementById('toast-msg');
+    
+    function notify(message) {
+      if (!toast) return;
+      toastMsg.textContent = message;
+      toast.classList.remove('opacity-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+      }, 1600);
+    }
+
+    // Shake slider interaction
+    const shakeSlider = document.getElementById('shake-slider');
+    const shakeLabel = document.getElementById('shake-label');
+    if (shakeSlider && shakeLabel) {
+      shakeSlider.addEventListener('input', (e) => {
+        const val = e.target.value;
+        const descriptor = val < 4 ? 'Gentle tilt' : val < 8 ? 'Medium wrist shake' : 'Vigorous shake';
+        shakeLabel.textContent = `Level ${val} (${descriptor})`;
+      });
+    }
+
+    // Operating window modes
+    const modeFade = document.getElementById('mode-fadeout');
+    const modeAlways = document.getElementById('mode-always');
+    if (modeFade && modeAlways) {
+      modeFade.addEventListener('click', () => {
+        modeFade.className = "py-1.5 rounded text-center font-label-sm text-label-sm font-bold bg-surface-container text-primary shadow-sm transition-all";
+        modeAlways.className = "py-1.5 rounded text-center font-label-sm text-label-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all";
+        notify("Shake trigger active during 60s fadeout");
+      });
+      modeAlways.addEventListener('click', () => {
+        modeAlways.className = "py-1.5 rounded text-center font-label-sm text-label-sm font-bold bg-surface-container text-primary shadow-sm transition-all";
+        modeFade.className = "py-1.5 rounded text-center font-label-sm text-label-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all";
+        notify("Shake trigger always active");
+      });
+    }
+
+    // Preset Buttons
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.preset-btn').forEach(b => {
+          b.className = "preset-btn px-3 py-2 rounded bg-surface-container-low text-on-surface font-label-md text-label-md active:bg-surface-bright";
+        });
+        btn.className = "preset-btn px-3 py-2 rounded bg-primary-container text-on-primary-container font-label-md text-label-md shadow-[0_0_12px_rgba(252,211,77,0.3)] font-bold";
+        notify(`Timer preset set to ${btn.textContent.trim()}`);
+      });
+    });
+
+    // Preview chime simulation
+    const previewBtn = document.getElementById('preview-chime-btn');
+    if (previewBtn) {
+      previewBtn.addEventListener('click', () => {
+        notify("Soft bedside chime preview played");
+      });
+    }
+
+    // Speed Controls
+    const tempoSlider = document.getElementById('tempo-slider');
+    const tempoVal = document.getElementById('tempo-val');
+    const tempoPlus = document.getElementById('tempo-plus');
+    const tempoMinus = document.getElementById('tempo-minus');
+
+    function updateTempo(val) {
+      const clamped = Math.min(3.0, Math.max(0.5, parseFloat(val))).toFixed(2);
+      tempoSlider.value = clamped;
+      tempoVal.textContent = `${clamped}x`;
+    }
+
+    if (tempoSlider) {
+      tempoSlider.addEventListener('input', (e) => updateTempo(e.target.value));
+    }
+    if (tempoPlus) {
+      tempoPlus.addEventListener('click', () => updateTempo(parseFloat(tempoSlider.value) + 0.05));
+    }
+    if (tempoMinus) {
+      tempoMinus.addEventListener('click', () => updateTempo(parseFloat(tempoSlider.value) - 0.05));
+    }
+
+    // Pitch Control
+    const pitchSlider = document.getElementById('pitch-slider');
+    const pitchVal = document.getElementById('pitch-val');
+    const pitchReset = document.getElementById('pitch-reset');
+
+    if (pitchSlider && pitchVal) {
+      pitchSlider.addEventListener('input', (e) => {
+        const val = e.target.value;
+        pitchVal.textContent = `${val > 0 ? '+' : ''}${val} st`;
+      });
+    }
+    if (pitchReset) {
+      pitchReset.addEventListener('click', () => {
+        pitchSlider.value = 0;
+        pitchVal.textContent = '0 st';
+        notify("Pitch shift reset to neutral");
+      });
+    }
+
+    // Volume Boost
+    const boostSlider = document.getElementById('boost-slider');
+    const boostVal = document.getElementById('boost-val');
+    if (boostSlider && boostVal) {
+      boostSlider.addEventListener('input', (e) => {
+        boostVal.textContent = `+${parseFloat(e.target.value).toFixed(1)} dB`;
+      });
+    }
+
+    // EQ Reset to Flat
+    const eqFlat = document.getElementById('eq-flat');
+    if (eqFlat) {
+      eqFlat.addEventListener('click', () => {
+        notify("Equalizer curve reset to flat (0dB)");
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.7)]" data-active-classes="text-primary-container bg-surface-container-high/60"><div class="flex items-stretch justify-around h-20 px-space-xs"><a class="flex-1 flex flex-col items-center justify-center gap-1 min-w-[48px] min-h-[48px] py-1 rounded transition-colors text-on-surface-variant hover:text-on-surface" data-path="now-playing" href="#"><div class="relative flex items-center justify-center"><span class="material-symbols-outlined text-[24px]">play_circle</span><span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-primary-container"></span></div><span class="font-label-sm text-label-sm font-semibold tracking-wide">Playing</span></a><a class="flex-1 flex flex-col items-center justify-center gap-1 min-w-[48px] min-h-[48px] py-1 rounded transition-colors text-on-surface-variant hover:text-on-surface" data-path="library" href="#"><span class="material-symbols-outlined text-[24px]">folder_copy</span><span class="font-label-sm text-label-sm font-semibold tracking-wide">Library</span></a><a class="flex-1 flex flex-col items-center justify-center gap-1 min-w-[48px] min-h-[48px] py-1 rounded transition-colors text-on-surface-variant hover:text-on-surface" data-path="characters-and-notes" href="#"><span class="material-symbols-outlined text-[24px]">history_edu</span><span class="font-label-sm text-label-sm font-semibold tracking-wide">Notes</span></a><a class="flex-1 flex flex-col items-center justify-center gap-1 min-w-[48px] min-h-[48px] py-1 rounded transition-colors text-on-surface-variant hover:text-on-surface" data-path="audio-and-sleep" href="#"><span class="material-symbols-outlined text-[24px]">bedtime</span><span class="font-label-sm text-label-sm font-semibold tracking-wide">DSP &amp; Sleep</span></a></div></nav></body></html>
