@@ -92,7 +92,7 @@ class AudioBookAudioHandler extends BaseAudioHandler with SeekHandler {
         MediaAction.seekForward,
         MediaAction.seekBackward,
       },
-      androidCompactActions: const [0, 1, 2],
+      androidCompactActionIndices: const [0, 1, 2],
       playing: true,
     ));
   }
