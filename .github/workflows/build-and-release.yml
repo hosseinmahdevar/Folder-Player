@@ -139,7 +139,7 @@ jobs:
   build-windows:
     name: Build Windows Desktop (x64)
     needs: test
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
