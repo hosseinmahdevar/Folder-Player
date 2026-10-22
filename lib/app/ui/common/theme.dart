@@ -66,7 +66,7 @@ class FolderPlayTheme {
         outline: borderSubtle,
       ),
       textTheme: textTheme,
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: surfaceLow,
         elevation: 0,
         shape: RoundedRectangleBorder(
