@@ -14,13 +14,12 @@ dependencies:
   # Audio & Media Services
   audio_service: ^0.18.17
   just_audio: ^0.9.38
-  just_audio_background: ^0.0.1-beta.11
 
   # Native DSP & FFI bindings for BASS and RNNoise
   ffi: ^2.1.2
 
   # Sensors & Hardware Accelerometer for Shake-to-Reset
-  sensors_plus: ^5.0.2
+  sensors_plus: ^7.1.1
 
   # State Management & Reactive Streams
   flutter_bloc: ^8.1.6
@@ -36,11 +35,9 @@ dependencies:
 
   # Desktop window styling & hardware integration
   window_manager: ^0.3.9
-  screen_retriever: ^0.1.9
 
-  # UI icons & typography
+  # UI typography
   google_fonts: ^6.2.1
-  lucide_icons: ^0.257.0
 
 dev_dependencies:
   flutter_test:

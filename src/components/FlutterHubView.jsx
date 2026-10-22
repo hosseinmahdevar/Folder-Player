@@ -45,7 +45,7 @@ dependencies:
   ffi: ^2.1.2
 
   # Sensors & Hardware Accelerometer for Shake-to-Reset
-  sensors_plus: ^5.0.2
+  sensors_plus: ^7.1.1
 
   # State Management & Reactive Streams
   flutter_bloc: ^8.1.6
@@ -56,8 +56,8 @@ dependencies:
   path_provider: ^2.1.3
   path: ^1.9.0
 
-  # Android Storage Access Framework (SAF) tree picker
-  shared_storage: ^0.7.1
+  # Cross-platform storage tree & folder picker (Android, Linux, Windows, macOS)
+  file_picker: ^8.0.0
 
   # Desktop window styling & hardware integration
   window_manager: ^0.3.9
