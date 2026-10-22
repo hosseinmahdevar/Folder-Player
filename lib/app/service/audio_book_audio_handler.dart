@@ -46,6 +46,22 @@ class AudioBookAudioHandler extends BaseAudioHandler with SeekHandler {
   SleepTimerConfig get sleepConfig => _sleepConfig;
   AutoRewindOffset? get autoRewind => _autoRewind;
 
+  Future<void> setPlaybackSpeed(double speed) async {
+    await _audioSink.setSpeed(speed);
+  }
+
+  Future<void> setVolumeBoost(int boostDb) async {
+    await _audioSink.setVolumeBoost(boostDb);
+  }
+
+  Future<void> setPitch(int semitones) async {
+    await _audioSink.setPitch(semitones);
+  }
+
+  Future<void> setEqualizer(EqualizerConfig config) async {
+    await _audioSink.setEqualizer(config);
+  }
+
   Future<void> loadBook(Book book) async {
     _currentBook = book;
     final file = book.currentFile;

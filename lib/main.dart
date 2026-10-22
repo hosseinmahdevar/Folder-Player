@@ -64,22 +64,59 @@ Future<void> main() async {
   runApp(const FolderPlayApp());
 }
 
-class FolderPlayApp extends StatelessWidget {
+class FolderPlayApp extends StatefulWidget {
   const FolderPlayApp({super.key});
+
+  @override
+  State<FolderPlayApp> createState() => _FolderPlayAppState();
+}
+
+class _FolderPlayAppState extends State<FolderPlayApp> {
+  AppThemeMode _currentTheme = AppThemeMode.nocturne;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTheme();
+  }
+
+  Future<void> _loadTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    final idx = prefs.getInt('folderplay_theme_mode') ?? 0;
+    if (idx >= 0 && idx < AppThemeMode.values.length) {
+      setState(() => _currentTheme = AppThemeMode.values[idx]);
+    }
+  }
+
+  Future<void> _changeTheme(AppThemeMode mode) async {
+    setState(() => _currentTheme = mode);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('folderplay_theme_mode', mode.index);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'FolderPlay',
       debugShowCheckedModeBanner: false,
-      theme: FolderPlayTheme.darkTheme,
-      home: const MainStudioShell(),
+      theme: FolderPlayTheme.getTheme(_currentTheme),
+      home: MainStudioShell(
+        currentTheme: _currentTheme,
+        onThemeChanged: _changeTheme,
+      ),
     );
   }
 }
 
 class MainStudioShell extends StatefulWidget {
-  const MainStudioShell({super.key});
+  final AppThemeMode currentTheme;
+  final ValueChanged<AppThemeMode> onThemeChanged;
+
+  const MainStudioShell({
+    super.key,
+    required this.currentTheme,
+    required this.onThemeChanged,
+  });
 
   @override
   State<MainStudioShell> createState() => _MainStudioShellState();
@@ -289,6 +326,11 @@ class _MainStudioShellState extends State<MainStudioShell> {
           ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.palette_outlined, color: FolderPlayTheme.amberGold),
+            tooltip: 'Switch Theme',
+            onPressed: () => _showThemePickerDialog(context),
+          ),
           IconButton(
             icon: const Icon(Icons.bedtime, color: FolderPlayTheme.studioEmerald),
             tooltip: 'Sleep Timer',
@@ -620,21 +662,282 @@ class _MainStudioShellState extends State<MainStudioShell> {
     );
   }
 
-  void _showSoundShapingDialog(BuildContext context) {
+  void _showThemePickerDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: FolderPlayTheme.surfaceLow,
+      backgroundColor: Theme.of(context).cardTheme.color ?? FolderPlayTheme.surfaceLow,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Sound Shaping DSP', style: GoogleFonts.literata(fontSize: 20, fontWeight: FontWeight.bold)),
+            Row(
+              children: [
+                const Icon(Icons.palette, color: FolderPlayTheme.amberGold),
+                const SizedBox(width: 8),
+                Text(
+                  'Select Theme Style',
+                  style: GoogleFonts.literata(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
             const SizedBox(height: 16),
-            const Text('Continuous Speed (0.5x–3.0x), RNNoise Speech Denoiser, +20dB Boost'),
-            const SizedBox(height: 20),
-            ElevatedButton(onPressed: () => Navigator.pop(ctx), child: const Text('Done')),
+            _buildThemeOption(
+              ctx,
+              title: 'OLED Nocturne',
+              desc: 'Pure pitch black background with warm parchment typography',
+              mode: AppThemeMode.nocturne,
+              color: const Color(0xFF070A0E),
+              accent: const Color(0xFFFCD34D),
+            ),
+            _buildThemeOption(
+              ctx,
+              title: 'Leatherbound',
+              desc: 'Warm antique sepia tones, bookbinding heritage warmth',
+              mode: AppThemeMode.leatherbound,
+              color: const Color(0xFF140D0A),
+              accent: const Color(0xFFE6B865),
+            ),
+            _buildThemeOption(
+              ctx,
+              title: 'Nordic Slate',
+              desc: 'Cool oceanic blue-grey palette with icy cyan accents',
+              mode: AppThemeMode.nordic,
+              color: const Color(0xFF0B1118),
+              accent: const Color(0xFF38BDF8),
+            ),
+            _buildThemeOption(
+              ctx,
+              title: 'Solar High Contrast',
+              desc: 'Maximum daylight contrast with golden amber glow',
+              mode: AppThemeMode.solar,
+              color: const Color(0xFF050505),
+              accent: const Color(0xFFF59E0B),
+            ),
+            const SizedBox(height: 8),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThemeOption(
+    BuildContext ctx, {
+    required String title,
+    required String desc,
+    required AppThemeMode mode,
+    required Color color,
+    required Color accent,
+  }) {
+    final isSelected = widget.currentTheme == mode;
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      color: isSelected ? accent.withValues(alpha: 0.15) : null,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(
+          color: isSelected ? accent : FolderPlayTheme.borderSubtle,
+          width: isSelected ? 1.5 : 1.0,
+        ),
+      ),
+      child: ListTile(
+        leading: Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: accent, width: 2),
+          ),
+          child: isSelected ? Icon(Icons.check, size: 18, color: accent) : null,
+        ),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(desc, style: const TextStyle(fontSize: 12)),
+        onTap: () {
+          widget.onThemeChanged(mode);
+          Navigator.pop(ctx);
+        },
+      ),
+    );
+  }
+
+  void _showSoundShapingDialog(BuildContext context) {
+    double currentSpeed = _activeBook.lastPosition.playbackSpeed;
+    double currentBoost = _activeBook.lastPosition.boostVolumeDb.toDouble();
+    int currentPitch = _activeBook.lastPosition.pitchShiftSemitones;
+    bool monoDownmix = false;
+    bool skipSilence = false;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).cardTheme.color ?? FolderPlayTheme.surfaceLow,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setModalState) => Padding(
+          padding: EdgeInsets.only(
+            left: 24.0,
+            right: 24.0,
+            top: 24.0,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 24.0,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.tune, color: FolderPlayTheme.calibrationCyan),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Sound Shaping & DSP',
+                          style: GoogleFonts.literata(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setModalState(() {
+                          currentSpeed = 1.0;
+                          currentBoost = 0.0;
+                          currentPitch = 0;
+                          monoDownmix = false;
+                          skipSilence = false;
+                        });
+                        _audioHandler.setPlaybackSpeed(1.0);
+                        _audioHandler.setVolumeBoost(0);
+                        _audioHandler.setPitch(0);
+                      },
+                      child: const Text('Reset Flat'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Speed Slider
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Playback Speed (0.5x – 3.0x)', style: TextStyle(fontWeight: FontWeight.w600)),
+                    Text('${currentSpeed.toStringAsFixed(2)}x', style: const TextStyle(color: FolderPlayTheme.amberGold, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                Slider(
+                  value: currentSpeed,
+                  min: 0.5,
+                  max: 3.0,
+                  divisions: 50,
+                  activeColor: FolderPlayTheme.amberGold,
+                  onChanged: (val) {
+                    setModalState(() => currentSpeed = val);
+                    _audioHandler.setPlaybackSpeed(val);
+                  },
+                ),
+                Wrap(
+                  spacing: 8,
+                  children: [0.8, 1.0, 1.15, 1.25, 1.5, 1.75, 2.0].map((preset) {
+                    final isSel = (currentSpeed - preset).abs() < 0.02;
+                    return ChoiceChip(
+                      label: Text('${preset}x'),
+                      selected: isSel,
+                      onSelected: (_) {
+                        setModalState(() => currentSpeed = preset);
+                        _audioHandler.setPlaybackSpeed(preset);
+                      },
+                    );
+                  }).toList(),
+                ),
+                const Divider(height: 32),
+
+                // Volume Boost
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Preamp Volume Boost (+0dB to +20dB)', style: TextStyle(fontWeight: FontWeight.w600)),
+                    Text('+${currentBoost.toInt()} dB', style: const TextStyle(color: FolderPlayTheme.studioEmerald, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                Slider(
+                  value: currentBoost,
+                  min: 0,
+                  max: 20,
+                  divisions: 20,
+                  activeColor: FolderPlayTheme.studioEmerald,
+                  onChanged: (val) {
+                    setModalState(() => currentBoost = val);
+                    _audioHandler.setVolumeBoost(val.toInt());
+                  },
+                ),
+                const Divider(height: 32),
+
+                // Pitch Shifting
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Voice Pitch Shift', style: TextStyle(fontWeight: FontWeight.w600)),
+                    Text('${currentPitch > 0 ? '+' : ''}$currentPitch st', style: const TextStyle(color: FolderPlayTheme.calibrationCyan, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                Slider(
+                  value: currentPitch.toDouble(),
+                  min: -6,
+                  max: 6,
+                  divisions: 12,
+                  activeColor: FolderPlayTheme.calibrationCyan,
+                  onChanged: (val) {
+                    setModalState(() => currentPitch = val.toInt());
+                    _audioHandler.setPitch(val.toInt());
+                  },
+                ),
+                const Divider(height: 32),
+
+                // Toggles
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Mono Downmix', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('Merge stereo channels into single ear for one-earbud listening', style: TextStyle(fontSize: 12)),
+                  value: monoDownmix,
+                  activeColor: FolderPlayTheme.amberGold,
+                  onChanged: (val) {
+                    setModalState(() => monoDownmix = val);
+                  },
+                ),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Skip Speech Silence', style: TextStyle(fontWeight: FontWeight.w600)),
+                  subtitle: const Text('Truncate pauses between audiobook paragraphs and narration', style: TextStyle(fontSize: 12)),
+                  value: skipSilence,
+                  activeColor: FolderPlayTheme.studioEmerald,
+                  onChanged: (val) {
+                    setModalState(() => skipSilence = val);
+                  },
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: FolderPlayTheme.amberGold,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    onPressed: () => Navigator.pop(ctx),
+                    child: const Text('APPLY DSP SETTINGS', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
