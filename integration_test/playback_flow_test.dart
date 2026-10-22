@@ -7,6 +7,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('E2E: Launch App, Verify Shell, and Toggle Playback', (tester) async {
+    await setupFolderPlay();
     await tester.pumpWidget(const FolderPlayApp());
     await tester.pumpAndSettle();
 

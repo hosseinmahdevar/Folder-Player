@@ -7,6 +7,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('E2E: Open Manual Folder Dialog and Submit Custom Path', (tester) async {
+    await setupFolderPlay();
     await tester.pumpWidget(const FolderPlayApp());
     await tester.pumpAndSettle();
 

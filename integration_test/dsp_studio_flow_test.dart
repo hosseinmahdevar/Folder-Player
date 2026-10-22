@@ -7,6 +7,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('E2E: Open Sound Shaping DSP and Adjust Speed and Boost', (tester) async {
+    await setupFolderPlay();
     await tester.pumpWidget(const FolderPlayApp());
     await tester.pumpAndSettle();
 

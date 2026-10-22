@@ -20,9 +20,13 @@ import 'infra/storage/saf_storage_adapter.dart';
 late AudioBookAudioHandler _audioHandler;
 final UniversalBookStorageAdapter _storageAdapter = UniversalBookStorageAdapter();
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await setupFolderPlay();
+  runApp(const FolderPlayApp());
+}
 
+Future<void> setupFolderPlay() async {
   // Desktop specific initialization (Linux, Windows, macOS)
   if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
     try {
@@ -60,8 +64,6 @@ Future<void> main() async {
   } catch (e) {
     debugPrint('AudioService init fallback: $e');
   }
-
-  runApp(const FolderPlayApp());
 }
 
 class FolderPlayApp extends StatefulWidget {

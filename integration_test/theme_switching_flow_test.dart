@@ -7,6 +7,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('E2E: Switch App Theme to Leatherbound & Nordic Slate', (tester) async {
+    await setupFolderPlay();
     await tester.pumpWidget(const FolderPlayApp());
     await tester.pumpAndSettle();
 
