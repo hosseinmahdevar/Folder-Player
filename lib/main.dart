@@ -485,26 +485,22 @@ class _MainStudioShellState extends State<MainStudioShell> {
               backgroundColor: FolderPlayTheme.surfaceLowest,
               destinations: const [
                 NavigationRailDestination(
-                  key: Key('rail_dest_now_playing'),
-                  icon: Icon(Icons.play_circle_outline),
+                  icon: Icon(Icons.play_circle_outline, key: Key('rail_icon_now_playing')),
                   selectedIcon: Icon(Icons.play_circle),
                   label: Text('Now Playing'),
                 ),
                 NavigationRailDestination(
-                  key: Key('rail_dest_library'),
-                  icon: Icon(Icons.library_books_outlined),
+                  icon: Icon(Icons.library_books_outlined, key: Key('rail_icon_library')),
                   selectedIcon: Icon(Icons.library_books),
                   label: Text('Library'),
                 ),
                 NavigationRailDestination(
-                  key: Key('rail_dest_characters'),
-                  icon: Icon(Icons.people_outline),
+                  icon: Icon(Icons.people_outline, key: Key('rail_icon_characters')),
                   selectedIcon: Icon(Icons.people),
                   label: Text('Characters'),
                 ),
                 NavigationRailDestination(
-                  key: Key('rail_dest_carmode'),
-                  icon: Icon(Icons.directions_car_outlined),
+                  icon: Icon(Icons.directions_car_outlined, key: Key('rail_icon_carmode')),
                   selectedIcon: Icon(Icons.directions_car),
                   label: Text('Car Mode'),
                 ),
@@ -523,26 +519,22 @@ class _MainStudioShellState extends State<MainStudioShell> {
               backgroundColor: FolderPlayTheme.surfaceLowest,
               destinations: const [
                 NavigationDestination(
-                  key: Key('nav_dest_now_playing'),
-                  icon: Icon(Icons.play_circle_outline),
+                  icon: Icon(Icons.play_circle_outline, key: Key('nav_icon_now_playing')),
                   selectedIcon: Icon(Icons.play_circle),
                   label: 'Now Playing',
                 ),
                 NavigationDestination(
-                  key: Key('nav_dest_library'),
-                  icon: Icon(Icons.library_books_outlined),
+                  icon: Icon(Icons.library_books_outlined, key: Key('nav_icon_library')),
                   selectedIcon: Icon(Icons.library_books),
                   label: 'Library',
                 ),
                 NavigationDestination(
-                  key: Key('nav_dest_characters'),
-                  icon: Icon(Icons.people_outline),
+                  icon: Icon(Icons.people_outline, key: Key('nav_icon_characters')),
                   selectedIcon: Icon(Icons.people),
                   label: 'Characters',
                 ),
                 NavigationDestination(
-                  key: Key('nav_dest_carmode'),
-                  icon: Icon(Icons.directions_car_outlined),
+                  icon: Icon(Icons.directions_car_outlined, key: Key('nav_icon_carmode')),
                   selectedIcon: Icon(Icons.directions_car),
                   label: 'Car Mode',
                 ),

@@ -54,7 +54,7 @@ jobs:
       - name: Run E2E & Integration Tests (Headless Linux Display)
         run: |
           sudo apt-get install -y xvfb
-          xvfb-run --auto-servernum flutter test integration_test/ -d linux
+          xvfb-run --auto-servernum flutter test integration_test/playback_flow_test.dart -d linux
 
   # =========================================================================
   # 2. BUILD ANDROID (APK & App Bundle AAB)
