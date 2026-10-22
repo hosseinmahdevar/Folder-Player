@@ -6,6 +6,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'app/service/audio_book_audio_handler.dart';
@@ -127,14 +129,83 @@ class _MainStudioShellState extends State<MainStudioShell> {
 
     _libraryBooks.add(_activeBook);
 
+    _loadPersistedFolders();
+
     // Safely load initial book metadata without blocking UI initialization
     try {
       _audioHandler.loadBook(_activeBook);
     } catch (_) {}
   }
 
+  Future<void> _loadPersistedFolders() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedFolders = prefs.getStringList('folderplay_saved_folders') ?? [];
+      if (savedFolders.isEmpty) return;
+
+      setState(() => _isScanning = true);
+      for (final folderPath in savedFolders) {
+        if (!_customFolderPaths.contains(folderPath)) {
+          _customFolderPaths.add(folderPath);
+        }
+        final single = await _storageAdapter.scanSingleBookDirectory(folderPath);
+        if (single != null && single.files.isNotEmpty) {
+          if (!_libraryBooks.any((b) => b.folderPath == single.folderPath)) {
+            _libraryBooks.add(single);
+          }
+        } else {
+          final subDirs = await _storageAdapter.scanRootFolders([folderPath]);
+          for (final b in subDirs) {
+            if (!_libraryBooks.any((existing) => existing.folderPath == b.folderPath)) {
+              _libraryBooks.add(b);
+            }
+          }
+        }
+      }
+      setState(() => _isScanning = false);
+    } catch (_) {
+      setState(() => _isScanning = false);
+    }
+  }
+
+  Future<bool> _requestAndroidStoragePermissions() async {
+    if (!Platform.isAndroid) return true;
+
+    // 1. Audio permission for Android 13+ (API 33+)
+    final audioStatus = await Permission.audio.request();
+    if (audioStatus.isGranted) return true;
+
+    // 2. Standard storage permission for Android 12 and below
+    final storageStatus = await Permission.storage.request();
+    if (storageStatus.isGranted) return true;
+
+    // 3. All files access fallback for Android 11+ custom external folders
+    if (await Permission.manageExternalStorage.isRestricted == false) {
+      final manageStatus = await Permission.manageExternalStorage.request();
+      if (manageStatus.isGranted) return true;
+    }
+
+    return false;
+  }
+
   Future<void> _pickAndAddCustomFolder() async {
     try {
+      if (Platform.isAndroid) {
+        final hasPermission = await _requestAndroidStoragePermissions();
+        if (!hasPermission && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Storage permission required to read audiobook folders.'),
+              action: SnackBarAction(
+                label: 'Settings',
+                onPressed: () => openAppSettings(),
+              ),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+
       final selectedDirectory = await FilePicker.platform.getDirectoryPath(
         dialogTitle: 'Select Audiobook Folder or Root Library',
       );
@@ -166,6 +237,10 @@ class _MainStudioShellState extends State<MainStudioShell> {
         }
         _isScanning = false;
       });
+
+      // Persist chosen folder paths
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList('folderplay_saved_folders', _customFolderPaths);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
