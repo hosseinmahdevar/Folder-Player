@@ -225,6 +225,99 @@ class _MainStudioShellState extends State<MainStudioShell> {
     return false;
   }
 
+  Future<String?> _showManualPathInputDialog(BuildContext context) async {
+    final controller = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(context).cardTheme.color ?? FolderPlayTheme.surfaceLow,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            const Icon(Icons.folder_open, color: FolderPlayTheme.amberGold),
+            const SizedBox(width: 8),
+            Text(
+              'Enter Folder Path',
+              style: GoogleFonts.literata(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'System dialog tool (zenity/kdialog) was not found. Please enter or paste the full directory path to your audiobook(s):',
+              style: TextStyle(fontSize: 13, color: Colors.grey),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: Platform.isWindows ? 'C:\\Audiobooks\\MyBook' : '/home/user/Audiobooks/MyBook',
+                hintStyle: const TextStyle(color: Colors.grey, fontSize: 13),
+                filled: true,
+                fillColor: FolderPlayTheme.surfaceLowest,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: FolderPlayTheme.borderSubtle),
+                ),
+                prefixIcon: const Icon(Icons.folder, size: 20),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              children: [
+                ActionChip(
+                  label: const Text('~/Audiobooks', style: TextStyle(fontSize: 11)),
+                  onPressed: () {
+                    final home = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'] ?? '';
+                    controller.text = '$home${Platform.pathSeparator}Audiobooks';
+                  },
+                ),
+                ActionChip(
+                  label: const Text('~/Downloads', style: TextStyle(fontSize: 11)),
+                  onPressed: () {
+                    final home = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'] ?? '';
+                    controller.text = '$home${Platform.pathSeparator}Downloads';
+                  },
+                ),
+                ActionChip(
+                  label: const Text('~/Music', style: TextStyle(fontSize: 11)),
+                  onPressed: () {
+                    final home = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'] ?? '';
+                    controller.text = '$home${Platform.pathSeparator}Music';
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, null),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: FolderPlayTheme.amberGold,
+              foregroundColor: Colors.black,
+            ),
+            onPressed: () {
+              final text = controller.text.trim();
+              if (text.isNotEmpty) {
+                Navigator.pop(ctx, text);
+              }
+            },
+            child: const Text('Add Folder', style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _pickAndAddCustomFolder() async {
     try {
       if (Platform.isAndroid) {
@@ -243,12 +336,34 @@ class _MainStudioShellState extends State<MainStudioShell> {
         }
       }
 
-      final selectedDirectory = await FilePicker.platform.getDirectoryPath(
-        dialogTitle: 'Select Audiobook Folder or Root Library',
-      );
+      String? selectedDirectory;
+      try {
+        selectedDirectory = await FilePicker.platform.getDirectoryPath(
+          dialogTitle: 'Select Audiobook Folder or Root Library',
+        );
+      } catch (pickerError) {
+        debugPrint('Native file picker error (e.g. missing zenity/kdialog): $pickerError');
+        // Fallback to manual folder path input dialog if native dialog executable is missing
+        if (mounted && (Platform.isLinux || Platform.isWindows || Platform.isMacOS)) {
+          selectedDirectory = await _showManualPathInputDialog(context);
+        }
+      }
 
       if (selectedDirectory == null || selectedDirectory.isEmpty) return;
 
+      await _processAddedDirectory(selectedDirectory);
+    } catch (e) {
+      setState(() => _isScanning = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add folder: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  Future<void> _processAddedDirectory(String selectedDirectory) async {
+    try {
       setState(() => _isScanning = true);
 
       // 1. Try scanning as single book directory
@@ -295,7 +410,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
       setState(() => _isScanning = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add folder: $e'), backgroundColor: Colors.red),
+          SnackBar(content: Text('Failed to scan folder: $e'), backgroundColor: Colors.red),
         );
       }
     }
@@ -326,6 +441,16 @@ class _MainStudioShellState extends State<MainStudioShell> {
           ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.folder_open, color: FolderPlayTheme.amberGold),
+            tooltip: 'Enter Folder Path Manually',
+            onPressed: () async {
+              final path = await _showManualPathInputDialog(context);
+              if (path != null && path.isNotEmpty) {
+                _processAddedDirectory(path);
+              }
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.palette_outlined, color: FolderPlayTheme.amberGold),
             tooltip: 'Switch Theme',
@@ -515,22 +640,44 @@ class _MainStudioShellState extends State<MainStudioShell> {
                 ],
               ),
             ),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: FolderPlayTheme.amberGold,
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          Row(
+            children: [
+              OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: FolderPlayTheme.amberGold,
+                  side: const BorderSide(color: FolderPlayTheme.borderSubtle),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                ),
+                onPressed: _isScanning
+                    ? null
+                    : () async {
+                        final path = await _showManualPathInputDialog(context);
+                        if (path != null && path.isNotEmpty) {
+                          _processAddedDirectory(path);
+                        }
+                      },
+                icon: const Icon(Icons.edit_note, size: 18),
+                label: const Text('Path'),
               ),
-              onPressed: _isScanning ? null : _pickAndAddCustomFolder,
-              icon: _isScanning
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black),
-                    )
-                  : const Icon(Icons.create_new_folder),
-              label: Text(_isScanning ? 'Scanning...' : 'Add Folder'),
-            ),
+              const SizedBox(width: 8),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: FolderPlayTheme.amberGold,
+                  foregroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+                onPressed: _isScanning ? null : _pickAndAddCustomFolder,
+                icon: _isScanning
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black),
+                      )
+                    : const Icon(Icons.create_new_folder),
+                label: Text(_isScanning ? 'Scanning...' : 'Browse'),
+              ),
+            ],
+          ),
           ],
         ),
         const SizedBox(height: 20),
