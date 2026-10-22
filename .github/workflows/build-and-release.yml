@@ -38,11 +38,23 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
+      - name: Install Linux Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libasound2-dev
+
+      - name: Enable Linux Desktop & Scaffold Runner
+        run: |
+          flutter config --enable-linux-desktop
+          flutter create --platforms=linux --project-name folderplay .
+
       - name: Analyze Dart Code
         run: flutter analyze || true
 
-      - name: Run E2E & Integration Tests
-        run: flutter test integration_test/
+      - name: Run E2E & Integration Tests (Headless Linux Display)
+        run: |
+          sudo apt-get install -y xvfb
+          xvfb-run --auto-servernum flutter test integration_test/ -d linux
 
   # =========================================================================
   # 2. BUILD ANDROID (APK & App Bundle AAB)
