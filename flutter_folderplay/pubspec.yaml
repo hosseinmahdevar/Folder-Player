@@ -1,0 +1,54 @@
+name: folderplay
+description: "FolderPlay - Offline Audiobook Player & Studio for Android and Desktop (Linux, macOS, Windows)"
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Audio & Media Services
+  audio_service: ^0.18.17
+  just_audio: ^0.9.38
+  just_audio_background: ^0.0.1-beta.11
+
+  # Native DSP & FFI bindings for BASS and RNNoise
+  ffi: ^2.1.2
+
+  # Sensors & Hardware Accelerometer for Shake-to-Reset
+  sensors_plus: ^5.0.2
+
+  # State Management & Reactive Streams
+  flutter_bloc: ^8.1.6
+  rxdart: ^0.27.7
+
+  # Serialization & Storage sidecars (.xml, .dat)
+  xml: ^6.5.0
+  path_provider: ^2.1.3
+  path: ^1.9.0
+
+  # Android Storage Access Framework (SAF) tree picker
+  shared_storage: ^0.7.1
+
+  # Desktop window styling & hardware integration
+  window_manager: ^0.3.9
+  screen_retriever: ^0.1.9
+
+  # UI icons & typography
+  google_fonts: ^6.2.1
+  lucide_icons: ^0.257.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/audio/
+    - assets/covers/

@@ -16,7 +16,8 @@ import {
   Smartphone, 
   Monitor,
   Activity,
-  HardDrive
+  HardDrive,
+  Code2
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -147,6 +148,18 @@ export const Header: React.FC<HeaderProps> = ({
           }`}
         >
           Sidecar .SABP
+        </button>
+
+        <button
+          onClick={() => onSelectView('flutter-hub')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition-colors ${
+            currentView === 'flutter-hub'
+              ? 'bg-[var(--bg-surface-high)] text-[var(--primary-container)] shadow-sm'
+              : 'hover:text-[var(--text-high)] hover:bg-[var(--bg-surface-low)]'
+          }`}
+        >
+          <Code2 className="w-3.5 h-3.5 text-[var(--secondary)]" />
+          <span>Flutter (Android & Desktop)</span>
         </button>
       </nav>
 

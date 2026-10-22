@@ -132,4 +132,5 @@ export type ViewMode =
   | 'sleep-timer'
   | 'car-mode'
   | 'transcoder'
-  | 'sidecar-inspector';
+  | 'sidecar-inspector'
+  | 'flutter-hub';

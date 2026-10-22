@@ -20,6 +20,7 @@ import { AudioSleepTimerModal } from './components/AudioSleepTimerModal';
 import { SidecarInspectorModal } from './components/SidecarInspectorModal';
 import { CarModeView } from './components/CarModeView';
 import { OpusTranscoderModal } from './components/OpusTranscoderModal';
+import { FlutterHubView } from './components/FlutterHubView';
 
 export default function App() {
   const [books, setBooks] = useState<Book[]>(INITIAL_BOOKS);
@@ -335,6 +336,10 @@ export default function App() {
                   onBackToPlayer={() => setCurrentView('now-playing')}
                 />
               )}
+
+              {currentView === 'flutter-hub' && (
+                <FlutterHubView />
+              )}
             </div>
 
             {/* Phone Home Bar Indicator */}
@@ -396,6 +401,10 @@ export default function App() {
                 onDeleteCharacter={() => {}}
                 onBackToPlayer={() => setCurrentView('now-playing')}
               />
+            )}
+
+            {currentView === 'flutter-hub' && (
+              <FlutterHubView />
             )}
 
             {currentView === 'sleep-timer' && (
