@@ -41,6 +41,9 @@ jobs:
       - name: Analyze Dart Code
         run: flutter analyze || true
 
+      - name: Run E2E & Integration Tests
+        run: flutter test integration_test/
+
   # =========================================================================
   # 2. BUILD ANDROID (APK & App Bundle AAB)
   # =========================================================================

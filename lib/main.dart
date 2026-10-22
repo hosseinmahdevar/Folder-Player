@@ -252,6 +252,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
             ),
             const SizedBox(height: 16),
             TextField(
+              key: const Key('input_manual_path'),
               controller: controller,
               autofocus: true,
               decoration: InputDecoration(
@@ -301,6 +302,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
             child: const Text('Cancel'),
           ),
           ElevatedButton(
+            key: const Key('btn_confirm_add_folder'),
             style: ElevatedButton.styleFrom(
               backgroundColor: FolderPlayTheme.amberGold,
               foregroundColor: Colors.black,
@@ -442,6 +444,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
         ),
         actions: [
           IconButton(
+            key: const Key('btn_action_manual_path'),
             icon: const Icon(Icons.folder_open, color: FolderPlayTheme.amberGold),
             tooltip: 'Enter Folder Path Manually',
             onPressed: () async {
@@ -452,16 +455,19 @@ class _MainStudioShellState extends State<MainStudioShell> {
             },
           ),
           IconButton(
+            key: const Key('btn_action_theme'),
             icon: const Icon(Icons.palette_outlined, color: FolderPlayTheme.amberGold),
             tooltip: 'Switch Theme',
             onPressed: () => _showThemePickerDialog(context),
           ),
           IconButton(
+            key: const Key('btn_action_sleep'),
             icon: const Icon(Icons.bedtime, color: FolderPlayTheme.studioEmerald),
             tooltip: 'Sleep Timer',
             onPressed: () => _showSleepTimerDialog(context),
           ),
           IconButton(
+            key: const Key('btn_action_dsp'),
             icon: const Icon(Icons.tune, color: FolderPlayTheme.calibrationCyan),
             tooltip: 'Sound Shaping DSP',
             onPressed: () => _showSoundShapingDialog(context),
@@ -478,10 +484,30 @@ class _MainStudioShellState extends State<MainStudioShell> {
               labelType: NavigationRailLabelType.all,
               backgroundColor: FolderPlayTheme.surfaceLowest,
               destinations: const [
-                NavigationRailDestination(icon: Icon(Icons.play_circle_outline), selectedIcon: Icon(Icons.play_circle), label: Text('Now Playing')),
-                NavigationRailDestination(icon: Icon(Icons.library_books_outlined), selectedIcon: Icon(Icons.library_books), label: Text('Library')),
-                NavigationRailDestination(icon: Icon(Icons.people_outline), selectedIcon: Icon(Icons.people), label: Text('Characters')),
-                NavigationRailDestination(icon: Icon(Icons.directions_car_outlined), selectedIcon: Icon(Icons.directions_car), label: Text('Car Mode')),
+                NavigationRailDestination(
+                  key: Key('rail_dest_now_playing'),
+                  icon: Icon(Icons.play_circle_outline),
+                  selectedIcon: Icon(Icons.play_circle),
+                  label: Text('Now Playing'),
+                ),
+                NavigationRailDestination(
+                  key: Key('rail_dest_library'),
+                  icon: Icon(Icons.library_books_outlined),
+                  selectedIcon: Icon(Icons.library_books),
+                  label: Text('Library'),
+                ),
+                NavigationRailDestination(
+                  key: Key('rail_dest_characters'),
+                  icon: Icon(Icons.people_outline),
+                  selectedIcon: Icon(Icons.people),
+                  label: Text('Characters'),
+                ),
+                NavigationRailDestination(
+                  key: Key('rail_dest_carmode'),
+                  icon: Icon(Icons.directions_car_outlined),
+                  selectedIcon: Icon(Icons.directions_car),
+                  label: Text('Car Mode'),
+                ),
               ],
             ),
 
@@ -496,10 +522,30 @@ class _MainStudioShellState extends State<MainStudioShell> {
               onDestinationSelected: (idx) => setState(() => _selectedIndex = idx),
               backgroundColor: FolderPlayTheme.surfaceLowest,
               destinations: const [
-                NavigationDestination(icon: Icon(Icons.play_circle_outline), selectedIcon: Icon(Icons.play_circle), label: 'Now Playing'),
-                NavigationDestination(icon: Icon(Icons.library_books_outlined), selectedIcon: Icon(Icons.library_books), label: 'Library'),
-                NavigationDestination(icon: Icon(Icons.people_outline), selectedIcon: Icon(Icons.people), label: 'Characters'),
-                NavigationDestination(icon: Icon(Icons.directions_car_outlined), selectedIcon: Icon(Icons.directions_car), label: 'Car Mode'),
+                NavigationDestination(
+                  key: Key('nav_dest_now_playing'),
+                  icon: Icon(Icons.play_circle_outline),
+                  selectedIcon: Icon(Icons.play_circle),
+                  label: 'Now Playing',
+                ),
+                NavigationDestination(
+                  key: Key('nav_dest_library'),
+                  icon: Icon(Icons.library_books_outlined),
+                  selectedIcon: Icon(Icons.library_books),
+                  label: 'Library',
+                ),
+                NavigationDestination(
+                  key: Key('nav_dest_characters'),
+                  icon: Icon(Icons.people_outline),
+                  selectedIcon: Icon(Icons.people),
+                  label: 'Characters',
+                ),
+                NavigationDestination(
+                  key: Key('nav_dest_carmode'),
+                  icon: Icon(Icons.directions_car_outlined),
+                  selectedIcon: Icon(Icons.directions_car),
+                  label: 'Car Mode',
+                ),
               ],
             )
           : null,
@@ -596,6 +642,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
                           ],
                         ),
                         child: IconButton(
+                          key: const Key('btn_play_pause'),
                           iconSize: 40,
                           icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.black),
                           onPressed: () => isPlaying ? _audioHandler.pause() : _audioHandler.play(),
@@ -643,6 +690,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
           Row(
             children: [
               OutlinedButton.icon(
+                key: const Key('btn_library_path_input'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: FolderPlayTheme.amberGold,
                   side: const BorderSide(color: FolderPlayTheme.borderSubtle),
@@ -661,6 +709,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
               ),
               const SizedBox(width: 8),
               ElevatedButton.icon(
+                key: const Key('btn_library_browse'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: FolderPlayTheme.amberGold,
                   foregroundColor: Colors.black,
@@ -835,6 +884,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
             const SizedBox(height: 16),
             _buildThemeOption(
               ctx,
+              key: const Key('theme_option_nocturne'),
               title: 'OLED Nocturne',
               desc: 'Pure pitch black background with warm parchment typography',
               mode: AppThemeMode.nocturne,
@@ -843,6 +893,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
             ),
             _buildThemeOption(
               ctx,
+              key: const Key('theme_option_leatherbound'),
               title: 'Leatherbound',
               desc: 'Warm antique sepia tones, bookbinding heritage warmth',
               mode: AppThemeMode.leatherbound,
@@ -851,6 +902,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
             ),
             _buildThemeOption(
               ctx,
+              key: const Key('theme_option_nordic'),
               title: 'Nordic Slate',
               desc: 'Cool oceanic blue-grey palette with icy cyan accents',
               mode: AppThemeMode.nordic,
@@ -859,6 +911,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
             ),
             _buildThemeOption(
               ctx,
+              key: const Key('theme_option_solar'),
               title: 'Solar High Contrast',
               desc: 'Maximum daylight contrast with golden amber glow',
               mode: AppThemeMode.solar,
@@ -874,6 +927,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
 
   Widget _buildThemeOption(
     BuildContext ctx, {
+    Key? key,
     required String title,
     required String desc,
     required AppThemeMode mode,
@@ -882,6 +936,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
   }) {
     final isSelected = widget.currentTheme == mode;
     return Card(
+      key: key,
       margin: const EdgeInsets.only(bottom: 8),
       color: isSelected ? accent.withValues(alpha: 0.15) : null,
       shape: RoundedRectangleBorder(
@@ -980,6 +1035,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
                   ],
                 ),
                 Slider(
+                  key: const Key('slider_playback_speed'),
                   value: currentSpeed,
                   min: 0.5,
                   max: 3.0,
@@ -1015,6 +1071,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
                   ],
                 ),
                 Slider(
+                  key: const Key('slider_volume_boost'),
                   value: currentBoost,
                   min: 0,
                   max: 20,
@@ -1073,6 +1130,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
+                    key: const Key('btn_apply_dsp'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: FolderPlayTheme.amberGold,
                       foregroundColor: Colors.black,
