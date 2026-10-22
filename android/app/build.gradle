@@ -16,7 +16,13 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def flutterRoot = localProperties.getProperty('flutter.sdk') ?: System.getenv('FLUTTER_ROOT')
+if (flutterRoot == null) {
+    flutterRoot = '/opt/hostedtoolcache/flutter/stable-3.22.2-x64/flutter'
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
