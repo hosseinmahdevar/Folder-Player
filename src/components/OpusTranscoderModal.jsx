@@ -4,28 +4,17 @@
  * FolderPlay Opus Batch Transcoder (FR-21 & UJ-4)
  * Background voice-optimized MP3 to Opus conversion with battery protection
  */
-
-import React, { useState } from 'react';
-import { Book } from '../types';
-import { 
-  FileCode, 
-  Battery, 
-  CheckCircle2, 
-  X, 
-  HardDrive, 
-  Zap, 
-  Play, 
-  Pause, 
-  ShieldCheck,
-  Sparkles
-} from 'lucide-react';
-
-interface OpusTranscoderModalProps {
-  book: Book;
-  onClose: () => void;
-}
-
-export const OpusTranscoderModal: React.FC<OpusTranscoderModalProps> = ({
+import { useState } from "react";
+import {
+  Battery,
+  CheckCircle2,
+  X,
+  HardDrive,
+  Zap,
+  Play,
+  Pause
+} from "lucide-react";
+const OpusTranscoderModal = ({
   book,
   onClose
 }) => {
@@ -34,16 +23,15 @@ export const OpusTranscoderModal: React.FC<OpusTranscoderModalProps> = ({
   const [embedCover, setEmbedCover] = useState(true);
   const [savedSpaceGb, setSavedSpaceGb] = useState(18.4);
   const [progressPercent, setProgressPercent] = useState(42);
-  const [activeFile, setActiveFile] = useState('018_The_Way_of_Kings_Ch24.mp3');
-
+  const [activeFile, setActiveFile] = useState("018_The_Way_of_Kings_Ch24.mp3");
   const handleToggleTranscode = () => {
     setIsTranscoding(!isTranscoding);
   };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+  return <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
       <div className="w-full max-w-xl bg-[var(--bg-surface-low)] border border-[var(--border-subtle)] rounded-2xl p-6 shadow-2xl flex flex-col gap-5 hardware-plate-raised">
-        {/* Header */}
+        {
+    /* Header */
+  }
         <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-[var(--primary-container)]/15 border border-[var(--primary-container)]/30 flex items-center justify-center text-[var(--primary-container)]">
@@ -59,14 +47,16 @@ export const OpusTranscoderModal: React.FC<OpusTranscoderModalProps> = ({
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-white transition-colors"
-          >
+    onClick={onClose}
+    className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-white transition-colors"
+  >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Space Saved Counter Hero Badge */}
+        {
+    /* Space Saved Counter Hero Badge */
+  }
         <div className="bg-[var(--bg-surface-lowest)] border border-[var(--border-subtle)] rounded-xl p-4 flex items-center justify-between shadow-inner">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-[var(--secondary)]/15 flex items-center justify-center text-[var(--secondary)]">
@@ -86,7 +76,9 @@ export const OpusTranscoderModal: React.FC<OpusTranscoderModalProps> = ({
           </span>
         </div>
 
-        {/* Progress & Current Conversion Status */}
+        {
+    /* Progress & Current Conversion Status */
+  }
         <div className="flex flex-col gap-2 bg-[var(--bg-surface)] p-4 rounded-xl border border-[var(--border-subtle)]">
           <div className="flex justify-between items-center text-xs font-mono">
             <span className="text-[var(--text-muted)]">Active Task:</span>
@@ -94,10 +86,10 @@ export const OpusTranscoderModal: React.FC<OpusTranscoderModalProps> = ({
           </div>
 
           <div className="w-full h-2.5 bg-[var(--bg-surface-lowest)] rounded-full overflow-hidden border border-[var(--border-subtle)] my-1">
-            <div 
-              className="h-full bg-[var(--primary-container)] transition-all duration-300"
-              style={{ width: `${progressPercent}%` }}
-            />
+            <div
+    className="h-full bg-[var(--primary-container)] transition-all duration-300"
+    style={{ width: `${progressPercent}%` }}
+  />
           </div>
 
           <div className="flex justify-between text-[11px] font-mono text-[var(--text-muted)]">
@@ -106,9 +98,13 @@ export const OpusTranscoderModal: React.FC<OpusTranscoderModalProps> = ({
           </div>
         </div>
 
-        {/* Safeguard Settings */}
+        {
+    /* Safeguard Settings */
+  }
         <div className="flex flex-col gap-3">
-          {/* Battery Protection Threshold */}
+          {
+    /* Battery Protection Threshold */
+  }
           <div className="flex items-center justify-between text-xs p-3 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
             <div className="flex items-center gap-2">
               <Battery className="w-4 h-4 text-emerald-400" />
@@ -120,7 +116,9 @@ export const OpusTranscoderModal: React.FC<OpusTranscoderModalProps> = ({
             <span className="font-mono font-bold text-[var(--primary-container)]">{batteryThreshold}%</span>
           </div>
 
-          {/* Embed Cover Art */}
+          {
+    /* Embed Cover Art */
+  }
           <div className="flex items-center justify-between text-xs p-3 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-[var(--secondary)]" />
@@ -130,35 +128,35 @@ export const OpusTranscoderModal: React.FC<OpusTranscoderModalProps> = ({
               </div>
             </div>
             <button
-              onClick={() => setEmbedCover(!embedCover)}
-              className={`w-10 h-5 rounded-full p-0.5 transition-colors ${embedCover ? 'bg-[var(--secondary)]' : 'bg-gray-700'}`}
-            >
-              <div className={`w-4 h-4 rounded-full bg-white transition-transform ${embedCover ? 'translate-x-5' : 'translate-x-0'}`} />
+    onClick={() => setEmbedCover(!embedCover)}
+    className={`w-10 h-5 rounded-full p-0.5 transition-colors ${embedCover ? "bg-[var(--secondary)]" : "bg-gray-700"}`}
+  >
+              <div className={`w-4 h-4 rounded-full bg-white transition-transform ${embedCover ? "translate-x-5" : "translate-x-0"}`} />
             </button>
           </div>
         </div>
 
-        {/* Actions */}
+        {
+    /* Actions */
+  }
         <div className="flex items-center justify-end gap-3 pt-2 border-t border-[var(--border-subtle)]">
           <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:bg-[var(--bg-surface)]"
-          >
+    onClick={onClose}
+    className="px-4 py-2 rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:bg-[var(--bg-surface)]"
+  >
             Close
           </button>
           <button
-            onClick={handleToggleTranscode}
-            className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold shadow-lg transition-transform active:scale-95 ${
-              isTranscoding
-                ? 'bg-amber-500 text-black'
-                : 'bg-[var(--primary-container)] text-[var(--bg-base)]'
-            }`}
-          >
+    onClick={handleToggleTranscode}
+    className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold shadow-lg transition-transform active:scale-95 ${isTranscoding ? "bg-amber-500 text-black" : "bg-[var(--primary-container)] text-[var(--bg-base)]"}`}
+  >
             {isTranscoding ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current" />}
-            <span>{isTranscoding ? 'Pause Background Service' : 'Start Background Conversion'}</span>
+            <span>{isTranscoding ? "Pause Background Service" : "Start Background Conversion"}</span>
           </button>
         </div>
       </div>
-    </div>
-  );
+    </div>;
+};
+export {
+  OpusTranscoderModal
 };

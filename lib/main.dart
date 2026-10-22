@@ -135,7 +135,7 @@ class _MainStudioShellState extends State<MainStudioShell> {
               decoration: BoxDecoration(
                 color: FolderPlayTheme.surfaceHigh,
                 borderRadius: BorderRadius.circular(4),
-                border: Border.write(const BorderSide(color: FolderPlayTheme.borderSubtle)),
+                border: Border.all(color: FolderPlayTheme.borderSubtle),
               ),
               child: const Text('DSP+', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: FolderPlayTheme.amberGold)),
             ),

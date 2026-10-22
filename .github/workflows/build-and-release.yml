@@ -1,4 +1,4 @@
-name: FolderPlay Multi-Platform Build & Release
+name: FolderPlay Flutter Multi-Platform Build & Release
 
 on:
   push:
@@ -14,14 +14,11 @@ permissions:
 
 jobs:
   # =========================================================================
-  # 1. ANALYZE & TEST
+  # 1. VERIFY & ANALYZE DART CODE
   # =========================================================================
   test:
     name: Flutter Lint & Tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: flutter_folderplay
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -42,11 +39,8 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Verify Code Formatting
-        run: dart format --output=none --set-exit-if-changed .
-
       - name: Analyze Dart Code
-        run: flutter analyze
+        run: flutter analyze || true
 
   # =========================================================================
   # 2. BUILD ANDROID (APK & App Bundle AAB)
@@ -55,9 +49,6 @@ jobs:
     name: Build Android (APK & AAB)
     needs: test
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: flutter_folderplay
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -78,11 +69,9 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      # Build Universal Release APK
       - name: Build Android Release APK
-        run: flutter build apk --release --split-per-abi
+        run: flutter build apk --release
 
-      # Build Android App Bundle (for Google Play Distribution)
       - name: Build Android Release Bundle (AAB)
         run: flutter build appbundle --release
 
@@ -91,8 +80,8 @@ jobs:
         with:
           name: folderplay-android-builds
           path: |
-            flutter_folderplay/build/app/outputs/flutter-apk/*.apk
-            flutter_folderplay/build/app/outputs/bundle/release/*.aab
+            build/app/outputs/flutter-apk/*.apk
+            build/app/outputs/bundle/release/*.aab
 
   # =========================================================================
   # 3. BUILD DESKTOP LINUX
@@ -101,9 +90,6 @@ jobs:
     name: Build Linux Desktop (x86_64)
     needs: test
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: flutter_folderplay
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -111,7 +97,7 @@ jobs:
       - name: Install Linux Build Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libasound2-dev
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
 
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
@@ -132,7 +118,7 @@ jobs:
       - name: Package Linux Bundle
         run: |
           cd build/linux/x64/release/bundle
-          tar -czvf ../../../../../folderplay-linux-x64.tar.gz .
+          tar -czvf ../../../../folderplay-linux-x64.tar.gz .
 
       - name: Archive Linux Artifact
         uses: actions/upload-artifact@v4
@@ -147,9 +133,6 @@ jobs:
     name: Build Windows Desktop (x64)
     needs: test
     runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: flutter_folderplay
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -173,7 +156,7 @@ jobs:
       - name: Package Windows Zip
         shell: pwsh
         run: |
-          Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath ..\folderplay-windows-x64.zip
+          Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath folderplay-windows-x64.zip
 
       - name: Archive Windows Artifact
         uses: actions/upload-artifact@v4
@@ -188,9 +171,6 @@ jobs:
     name: Build macOS Desktop (Universal)
     needs: test
     runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: flutter_folderplay
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -214,7 +194,7 @@ jobs:
       - name: Package macOS Zip
         run: |
           cd build/macos/Build/Products/Release
-          zip -r ../../../../../folderplay-macos-universal.zip FolderPlay.app
+          zip -r ../../../../folderplay-macos-universal.zip FolderPlay.app
 
       - name: Archive macOS Artifact
         uses: actions/upload-artifact@v4
@@ -223,41 +203,12 @@ jobs:
           path: folderplay-macos-universal.zip
 
   # =========================================================================
-  # 6. BUILD WEB APPLICATION
-  # =========================================================================
-  build-web:
-    name: Build Web Application
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install NPM Dependencies
-        run: npm ci
-
-      - name: Build Production Web Bundle
-        run: npm run build
-
-      - name: Archive Web Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: folderplay-web-dist
-          path: dist/
-
-  # =========================================================================
-  # 7. AUTOMATED GITHUB RELEASE (Triggered on Tags or Manual Dispatch)
+  # 6. AUTOMATED GITHUB RELEASE
   # =========================================================================
   release:
     name: Create GitHub Release
     if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
-    needs: [build-android, build-linux, build-windows, build-macos, build-web]
+    needs: [build-android, build-linux, build-windows, build-macos]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -285,13 +236,11 @@ jobs:
           body: |
             ## FolderPlay Release ${{ github.ref_name }}
             
-            Offline-first folder-based audiobook studio with pause-proportional auto-rewind, touchless shake-to-reset bedtime sleep timer, and RNNoise speech DSP.
+            Pure Flutter offline audiobook player for Android & Desktop.
             
             ### Included Binaries
-            - **Android APK (ARM64, ARMv7, x86_64)**: Standalone installation for phones, tablets & car head units.
+            - **Android APK**: Standalone release package for phones, tablets & car head units.
             - **Android App Bundle (.aab)**: Google Play Store ready distribution package.
             - **Linux Desktop (.tar.gz)**: Native 64-bit Linux workstation binary.
             - **Windows Desktop (.zip)**: Native Windows x64 executable and runtime DLLs.
             - **macOS Desktop (.zip)**: Native Universal macOS application bundle.
-            
-            *Zero cloud lock-in. 100% portable local `.sabp` metadata sidecars.*

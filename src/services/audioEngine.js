@@ -4,61 +4,54 @@
  * Web Audio Engine for FolderPlay
  * Clean-room reconstruction of BASS + DSP effects + Sleep Timer + Auto-Rewind
  */
-
-import { DspSettings, SleepTimerState, AutoRewindState } from '../types';
-
-export class AudioEngine {
-  private ctx: AudioContext | null = null;
-  private isPlaying = false;
-  private currentTimeMs = 0;
-  private durationMs = 1800000; // 30 minutes default
-  private playbackRate = 1.0;
-  private pitchShift = 0; // semitones
-  private volumeBoostDb = 0;
-  private rnnoiseEnabled = true;
-  private balance = 0;
-  private isMono = false;
-  private eqGains: [number, number, number, number, number] = [0, 0, 0, 0, 0];
-  
+class AudioEngine {
+  ctx = null;
+  isPlaying = false;
+  currentTimeMs = 0;
+  durationMs = 18e5;
+  // 30 minutes default
+  playbackRate = 1;
+  pitchShift = 0;
+  // semitones
+  volumeBoostDb = 0;
+  rnnoiseEnabled = true;
+  balance = 0;
+  isMono = false;
+  eqGains = [0, 0, 0, 0, 0];
   // Audio Nodes
-  private masterGain: GainNode | null = null;
-  private boostGain: GainNode | null = null;
-  private compressor: DynamicsCompressorNode | null = null;
-  private eqFilters: BiquadFilterNode[] = [];
-  private rnnoiseHighpass: BiquadFilterNode | null = null;
-  private rnnoiseNotch: BiquadFilterNode | null = null;
-  private rnnoiseVocalBoost: BiquadFilterNode | null = null;
-  private panner: StereoPannerNode | null = null;
-  private analyser: AnalyserNode | null = null;
-  
+  masterGain = null;
+  boostGain = null;
+  compressor = null;
+  eqFilters = [];
+  rnnoiseHighpass = null;
+  rnnoiseNotch = null;
+  rnnoiseVocalBoost = null;
+  panner = null;
+  analyser = null;
   // Synthesized voice narration oscillators (harmonic speech emulation)
-  private vocalOsc1: OscillatorNode | null = null;
-  private vocalOsc2: OscillatorNode | null = null;
-  private vocalOsc3: OscillatorNode | null = null;
-  private vocalGain: GainNode | null = null;
-  private ambientNoiseSource: AudioBufferSourceNode | null = null;
-  private ambientNoiseGain: GainNode | null = null;
-  
+  vocalOsc1 = null;
+  vocalOsc2 = null;
+  vocalOsc3 = null;
+  vocalGain = null;
+  ambientNoiseSource = null;
+  ambientNoiseGain = null;
   // Custom audio element when user loads a real file
-  private customAudio: HTMLAudioElement | null = null;
-  private customMediaSource: MediaElementAudioSourceNode | null = null;
-  private usingCustomAudio = false;
-
+  customAudio = null;
+  customMediaSource = null;
+  usingCustomAudio = false;
   // Position clock loop
-  private timerInterval: number | null = null;
-  private lastClockEpoch = 0;
-  
+  timerInterval = null;
+  lastClockEpoch = 0;
   // Auto-Rewind Tracking
-  private lastPauseEpochMs = 0;
-  private autoRewindState: AutoRewindState = {
+  lastPauseEpochMs = 0;
+  autoRewindState = {
     armed: false,
     calculatedOffsetSec: 0,
     pausedDurationSec: 0,
     lastPauseEpochMs: 0
   };
-
   // Sleep Timer
-  private sleepTimerState: SleepTimerState = {
+  sleepTimerState = {
     active: false,
     targetDurationSec: 1800,
     remainingSec: 1800,
@@ -68,185 +61,135 @@ export class AudioEngine {
     scheduledBedtimeActive: false,
     androidAutoInhibit: false
   };
-  private sleepTimerInterval: number | null = null;
-
+  sleepTimerInterval = null;
   // Callbacks
-  private onPositionUpdate: ((positionMs: number, autoRewind: AutoRewindState) => void) | null = null;
-  private onSleepTimerUpdate: ((state: SleepTimerState) => void) | null = null;
-  private onStateChange: ((isPlaying: boolean) => void) | null = null;
-
+  onPositionUpdate = null;
+  onSleepTimerUpdate = null;
+  onStateChange = null;
   constructor() {
     this.setupDeviceMotionListener();
   }
-
-  private initContext() {
+  initContext() {
     if (this.ctx) return;
-    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     this.ctx = new AudioContextClass();
-
-    // 1. Analyser Node
     this.analyser = this.ctx.createAnalyser();
     this.analyser.fftSize = 256;
     this.analyser.smoothingTimeConstant = 0.8;
-
-    // 2. Master Gain Node
     this.masterGain = this.ctx.createGain();
-    this.masterGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
-
-    // 3. Loudness Boost Gain Node (+0 to +20 dB)
+    this.masterGain.gain.setValueAtTime(1, this.ctx.currentTime);
     this.boostGain = this.ctx.createGain();
     this.updateBoostGain();
-
-    // 4. Dynamics Compressor (Limiter to prevent clipping under heavy +20dB boost)
     this.compressor = this.ctx.createDynamicsCompressor();
     this.compressor.threshold.setValueAtTime(-18, this.ctx.currentTime);
     this.compressor.knee.setValueAtTime(12, this.ctx.currentTime);
     this.compressor.ratio.setValueAtTime(8, this.ctx.currentTime);
-    this.compressor.attack.setValueAtTime(0.003, this.ctx.currentTime);
+    this.compressor.attack.setValueAtTime(3e-3, this.ctx.currentTime);
     this.compressor.release.setValueAtTime(0.25, this.ctx.currentTime);
-
-    // 5. 5-Band Parametric Equalizer (60Hz, 230Hz, 910Hz, 3.6kHz, 14kHz)
-    const eqFrequencies = [60, 230, 910, 3600, 14000];
-    const eqTypes: BiquadFilterType[] = ['lowshelf', 'peaking', 'peaking', 'peaking', 'highshelf'];
-    
+    const eqFrequencies = [60, 230, 910, 3600, 14e3];
+    const eqTypes = ["lowshelf", "peaking", "peaking", "peaking", "highshelf"];
     this.eqFilters = eqFrequencies.map((freq, i) => {
-      const filter = this.ctx!.createBiquadFilter();
+      const filter = this.ctx.createBiquadFilter();
       filter.type = eqTypes[i];
-      filter.frequency.setValueAtTime(freq, this.ctx!.currentTime);
-      filter.gain.setValueAtTime(this.eqGains[i], this.ctx!.currentTime);
-      filter.Q.setValueAtTime(1.0, this.ctx!.currentTime);
+      filter.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      filter.gain.setValueAtTime(this.eqGains[i], this.ctx.currentTime);
+      filter.Q.setValueAtTime(1, this.ctx.currentTime);
       return filter;
     });
-
-    // 6. RNNoise Speech Enhancement Filters
-    // 80Hz highpass to remove low mic rumble
     this.rnnoiseHighpass = this.ctx.createBiquadFilter();
-    this.rnnoiseHighpass.type = 'highpass';
+    this.rnnoiseHighpass.type = "highpass";
     this.rnnoiseHighpass.frequency.setValueAtTime(85, this.ctx.currentTime);
-
-    // 60Hz hum notch filter
     this.rnnoiseNotch = this.ctx.createBiquadFilter();
-    this.rnnoiseNotch.type = 'notch';
+    this.rnnoiseNotch.type = "notch";
     this.rnnoiseNotch.frequency.setValueAtTime(60, this.ctx.currentTime);
-    this.rnnoiseNotch.Q.setValueAtTime(6.0, this.ctx.currentTime);
-
-    // Vocal presence boost
+    this.rnnoiseNotch.Q.setValueAtTime(6, this.ctx.currentTime);
     this.rnnoiseVocalBoost = this.ctx.createBiquadFilter();
-    this.rnnoiseVocalBoost.type = 'peaking';
+    this.rnnoiseVocalBoost.type = "peaking";
     this.rnnoiseVocalBoost.frequency.setValueAtTime(3200, this.ctx.currentTime);
     this.rnnoiseVocalBoost.Q.setValueAtTime(1.2, this.ctx.currentTime);
     this.rnnoiseVocalBoost.gain.setValueAtTime(this.rnnoiseEnabled ? 3.5 : 0, this.ctx.currentTime);
-
-    // 7. Stereo Panner
     try {
       this.panner = this.ctx.createStereoPanner();
       this.panner.pan.setValueAtTime(this.balance, this.ctx.currentTime);
     } catch {
-      // Fallback if not supported
       this.panner = null;
     }
-
-    // Connect node graph:
-    // Input Source -> RNNoise HP -> RNNoise Notch -> RNNoise Vocal -> EQ Filters [0..4] -> Stereo Panner -> Compressor -> Boost -> Master -> Analyser -> Destination
-    let currentNode: AudioNode = this.rnnoiseHighpass;
+    let currentNode = this.rnnoiseHighpass;
     this.rnnoiseHighpass.connect(this.rnnoiseNotch);
     this.rnnoiseNotch.connect(this.rnnoiseVocalBoost);
     currentNode = this.rnnoiseVocalBoost;
-
     for (const filter of this.eqFilters) {
       currentNode.connect(filter);
       currentNode = filter;
     }
-
     if (this.panner) {
       currentNode.connect(this.panner);
       currentNode = this.panner;
     }
-
     currentNode.connect(this.compressor);
     this.compressor.connect(this.boostGain);
     this.boostGain.connect(this.masterGain);
     this.masterGain.connect(this.analyser);
     this.analyser.connect(this.ctx.destination);
   }
-
   // --- Real Speech Synthesizer Generation ---
-  private startSynthesizer() {
+  startSynthesizer() {
     if (!this.ctx || this.usingCustomAudio) return;
     this.stopSynthesizer();
-
     const t = this.ctx.currentTime;
-    
-    // Fundamental vocal frequency (average male/female narrator pitch ~130Hz)
     const baseFreq = 130 * Math.pow(2, this.pitchShift / 12);
-    
     this.vocalOsc1 = this.ctx.createOscillator();
-    this.vocalOsc1.type = 'sawtooth';
+    this.vocalOsc1.type = "sawtooth";
     this.vocalOsc1.frequency.setValueAtTime(baseFreq, t);
-
     this.vocalOsc2 = this.ctx.createOscillator();
-    this.vocalOsc2.type = 'sine';
+    this.vocalOsc2.type = "sine";
     this.vocalOsc2.frequency.setValueAtTime(baseFreq * 2.02, t);
-
     this.vocalOsc3 = this.ctx.createOscillator();
-    this.vocalOsc3.type = 'triangle';
+    this.vocalOsc3.type = "triangle";
     this.vocalOsc3.frequency.setValueAtTime(baseFreq * 3.01, t);
-
-    // Vocal envelope gain simulating speech phrasing cadence
     this.vocalGain = this.ctx.createGain();
     this.vocalGain.gain.setValueAtTime(0.08, t);
-
-    // Modulate speech cadence with rhythmic envelope
     const lfo = this.ctx.createOscillator();
-    lfo.type = 'sine';
+    lfo.type = "sine";
     lfo.frequency.setValueAtTime(0.4 * this.playbackRate, t);
     const lfoGain = this.ctx.createGain();
     lfoGain.gain.setValueAtTime(0.04, t);
     lfo.connect(lfoGain);
     lfoGain.connect(this.vocalGain.gain);
     lfo.start(t);
-
     this.vocalOsc1.connect(this.vocalGain);
     this.vocalOsc2.connect(this.vocalGain);
     this.vocalOsc3.connect(this.vocalGain);
-
     if (this.rnnoiseHighpass) {
       this.vocalGain.connect(this.rnnoiseHighpass);
     }
-
     this.vocalOsc1.start(t);
     this.vocalOsc2.start(t);
     this.vocalOsc3.start(t);
-
-    // Add subtle tape/studio room presence when RNNoise is off
     if (!this.rnnoiseEnabled) {
       this.startStudioRoomPresence();
     }
   }
-
-  private startStudioRoomPresence() {
+  startStudioRoomPresence() {
     if (!this.ctx || this.ambientNoiseSource) return;
     const bufferSize = this.ctx.sampleRate * 2;
     const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
     const output = noiseBuffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
-      output[i] = (Math.random() * 2 - 1) * 0.005;
+      output[i] = (Math.random() * 2 - 1) * 5e-3;
     }
-
     this.ambientNoiseSource = this.ctx.createBufferSource();
     this.ambientNoiseSource.buffer = noiseBuffer;
     this.ambientNoiseSource.loop = true;
-
     this.ambientNoiseGain = this.ctx.createGain();
-    this.ambientNoiseGain.gain.setValueAtTime(0.008, this.ctx.currentTime);
+    this.ambientNoiseGain.gain.setValueAtTime(8e-3, this.ctx.currentTime);
     this.ambientNoiseSource.connect(this.ambientNoiseGain);
     if (this.rnnoiseHighpass) {
       this.ambientNoiseGain.connect(this.rnnoiseHighpass);
     }
     this.ambientNoiseSource.start();
   }
-
-  private stopSynthesizer() {
+  stopSynthesizer() {
     try {
       this.vocalOsc1?.stop();
       this.vocalOsc2?.stop();
@@ -259,7 +202,6 @@ export class AudioEngine {
       this.ambientNoiseSource?.disconnect();
       this.ambientNoiseGain?.disconnect();
     } catch {
-      // Ignore if already stopped
     }
     this.vocalOsc1 = null;
     this.vocalOsc2 = null;
@@ -268,81 +210,66 @@ export class AudioEngine {
     this.ambientNoiseSource = null;
     this.ambientNoiseGain = null;
   }
-
   // --- Real Audio File Loader ---
-  public loadAudioFile(file: File) {
+  loadAudioFile(file) {
     this.initContext();
     if (this.customAudio) {
       this.customAudio.pause();
       this.customAudio = null;
     }
-
     const objectUrl = URL.createObjectURL(file);
     this.customAudio = new Audio(objectUrl);
     this.customAudio.playbackRate = this.playbackRate;
     this.usingCustomAudio = true;
-
-    this.customAudio.addEventListener('loadedmetadata', () => {
+    this.customAudio.addEventListener("loadedmetadata", () => {
       if (this.customAudio) {
-        this.durationMs = Math.round(this.customAudio.duration * 1000);
+        this.durationMs = Math.round(this.customAudio.duration * 1e3);
       }
     });
-
     if (this.ctx && this.rnnoiseHighpass) {
       try {
         this.customMediaSource = this.ctx.createMediaElementSource(this.customAudio);
         this.customMediaSource.connect(this.rnnoiseHighpass);
       } catch (err) {
-        console.warn('Media element source already connected or unsupported', err);
+        console.warn("Media element source already connected or unsupported", err);
       }
     }
   }
-
   // --- Auto-Rewind Logic (FR-6) ---
-  public calculateAutoRewind(pausedDurationSec: number): number {
+  calculateAutoRewind(pausedDurationSec) {
     if (pausedDurationSec < 3) return 0;
     if (pausedDurationSec <= 60) {
-      // 3s to 60s -> 2s to 5s rewind
-      return Math.round(2 + ((pausedDurationSec - 3) / 57) * 3);
+      return Math.round(2 + (pausedDurationSec - 3) / 57 * 3);
     }
     if (pausedDurationSec <= 1800) {
-      // 1m to 30m -> 10s to 15s rewind
-      return Math.round(10 + ((pausedDurationSec - 60) / 1740) * 5);
+      return Math.round(10 + (pausedDurationSec - 60) / 1740 * 5);
     }
-    // > 30m -> 20s to 30s
-    return Math.min(30, Math.round(20 + ((pausedDurationSec - 1800) / 3600) * 10));
+    return Math.min(30, Math.round(20 + (pausedDurationSec - 1800) / 3600 * 10));
   }
-
   // --- Playback Controls ---
-  public async play(options?: { ignoreAutoRewind?: boolean }) {
+  async play(options) {
     this.initContext();
-    if (this.ctx?.state === 'suspended') {
+    if (this.ctx?.state === "suspended") {
       await this.ctx.resume();
     }
-
-    // Apply auto-rewind if armed
     if (!options?.ignoreAutoRewind && this.autoRewindState.armed && this.autoRewindState.calculatedOffsetSec > 0) {
-      const rewindMs = this.autoRewindState.calculatedOffsetSec * 1000;
+      const rewindMs = this.autoRewindState.calculatedOffsetSec * 1e3;
       this.currentTimeMs = Math.max(0, this.currentTimeMs - rewindMs);
       this.autoRewindState.armed = false;
     }
-
     this.isPlaying = true;
     this.lastClockEpoch = Date.now();
-
     if (this.usingCustomAudio && this.customAudio) {
-      this.customAudio.currentTime = this.currentTimeMs / 1000;
+      this.customAudio.currentTime = this.currentTimeMs / 1e3;
       this.customAudio.playbackRate = this.playbackRate;
       await this.customAudio.play();
     } else {
       this.startSynthesizer();
     }
-
     this.startPositionClock();
     this.onStateChange?.(true);
   }
-
-  public pause() {
+  pause() {
     if (!this.isPlaying) return;
     this.isPlaying = false;
     this.stopSynthesizer();
@@ -350,57 +277,48 @@ export class AudioEngine {
       this.customAudio.pause();
     }
     this.stopPositionClock();
-
-    // Calculate auto-rewind for next resume
     this.lastPauseEpochMs = Date.now();
-    const pausedDurationSec = 0; // will count while paused
+    const pausedDurationSec = 0;
     this.autoRewindState = {
       armed: true,
       calculatedOffsetSec: 0,
       pausedDurationSec: 0,
       lastPauseEpochMs: this.lastPauseEpochMs
     };
-
     this.onStateChange?.(false);
   }
-
-  public togglePlayPause() {
+  togglePlayPause() {
     if (this.isPlaying) {
       this.pause();
     } else {
       this.play();
     }
   }
-
-  public seekTo(positionMs: number) {
+  seekTo(positionMs) {
     this.currentTimeMs = Math.max(0, Math.min(this.durationMs, positionMs));
     if (this.usingCustomAudio && this.customAudio) {
-      this.customAudio.currentTime = this.currentTimeMs / 1000;
+      this.customAudio.currentTime = this.currentTimeMs / 1e3;
     }
     this.onPositionUpdate?.(this.currentTimeMs, this.autoRewindState);
   }
-
-  public jump(offsetSeconds: number) {
-    this.seekTo(this.currentTimeMs + offsetSeconds * 1000);
+  jump(offsetSeconds) {
+    this.seekTo(this.currentTimeMs + offsetSeconds * 1e3);
   }
-
-  public dismissAutoRewind() {
+  dismissAutoRewind() {
     this.autoRewindState.armed = false;
     this.autoRewindState.calculatedOffsetSec = 0;
     this.onPositionUpdate?.(this.currentTimeMs, this.autoRewindState);
   }
-
   // --- Clock Loop ---
-  private startPositionClock() {
+  startPositionClock() {
     this.stopPositionClock();
     this.timerInterval = window.setInterval(() => {
       if (!this.isPlaying) return;
       const now = Date.now();
       const elapsedMs = (now - this.lastClockEpoch) * this.playbackRate;
       this.lastClockEpoch = now;
-
       if (this.usingCustomAudio && this.customAudio) {
-        this.currentTimeMs = Math.round(this.customAudio.currentTime * 1000);
+        this.currentTimeMs = Math.round(this.customAudio.currentTime * 1e3);
       } else {
         this.currentTimeMs += elapsedMs;
         if (this.currentTimeMs >= this.durationMs) {
@@ -408,46 +326,38 @@ export class AudioEngine {
           this.pause();
         }
       }
-
       this.onPositionUpdate?.(this.currentTimeMs, this.autoRewindState);
     }, 100);
   }
-
-  private stopPositionClock() {
+  stopPositionClock() {
     if (this.timerInterval !== null) {
       clearInterval(this.timerInterval);
       this.timerInterval = null;
     }
   }
-
   // --- DSP & Sound Shaping Adjustments ---
-  public setSpeed(speed: number) {
-    this.playbackRate = Math.max(0.5, Math.min(3.0, speed));
+  setSpeed(speed) {
+    this.playbackRate = Math.max(0.5, Math.min(3, speed));
     if (this.customAudio) {
       this.customAudio.playbackRate = this.playbackRate;
     }
   }
-
-  public setPitch(semitones: number) {
+  setPitch(semitones) {
     this.pitchShift = Math.max(-12, Math.min(12, semitones));
     if (this.isPlaying && !this.usingCustomAudio) {
       this.startSynthesizer();
     }
   }
-
-  public setVolumeBoost(db: number) {
+  setVolumeBoost(db) {
     this.volumeBoostDb = Math.max(0, Math.min(20, db));
     this.updateBoostGain();
   }
-
-  private updateBoostGain() {
+  updateBoostGain() {
     if (!this.boostGain || !this.ctx) return;
-    // Decibel to linear multiplier: 10^(dB/20)
     const linearGain = Math.pow(10, this.volumeBoostDb / 20);
     this.boostGain.gain.setTargetAtTime(linearGain, this.ctx.currentTime, 0.05);
   }
-
-  public setRNNoise(enabled: boolean) {
+  setRNNoise(enabled) {
     this.rnnoiseEnabled = enabled;
     if (this.rnnoiseVocalBoost && this.ctx) {
       this.rnnoiseVocalBoost.gain.setTargetAtTime(enabled ? 3.5 : 0, this.ctx.currentTime, 0.1);
@@ -460,72 +370,57 @@ export class AudioEngine {
         this.ambientNoiseSource?.disconnect();
         this.ambientNoiseSource = null;
       } catch {
-        // ignore
       }
     }
   }
-
-  public setEqualizer(gains: [number, number, number, number, number]) {
+  setEqualizer(gains) {
     this.eqGains = [...gains];
     if (!this.ctx) return;
     this.eqFilters.forEach((filter, i) => {
-      filter.gain.setTargetAtTime(this.eqGains[i], this.ctx!.currentTime, 0.05);
+      filter.gain.setTargetAtTime(this.eqGains[i], this.ctx.currentTime, 0.05);
     });
   }
-
-  public setBalance(pan: number) {
-    this.balance = Math.max(-1.0, Math.min(1.0, pan));
+  setBalance(pan) {
+    this.balance = Math.max(-1, Math.min(1, pan));
     if (this.panner && this.ctx) {
       this.panner.pan.setTargetAtTime(this.balance, this.ctx.currentTime, 0.05);
     }
   }
-
-  public setMono(mono: boolean) {
+  setMono(mono) {
     this.isMono = mono;
-    // When mono is true, center balance
     if (mono && this.panner && this.ctx) {
       this.panner.pan.setTargetAtTime(0, this.ctx.currentTime, 0.05);
     }
   }
-
   // --- Sleep Timer & Shake-to-Reset (FR-8, FR-9, FR-10) ---
-  public startSleepTimer(durationSec: number) {
+  startSleepTimer(durationSec) {
     this.sleepTimerState.active = true;
     this.sleepTimerState.targetDurationSec = durationSec;
     this.sleepTimerState.remainingSec = durationSec;
     this.sleepTimerState.fadeoutActive = false;
-
     if (this.sleepTimerInterval !== null) {
       clearInterval(this.sleepTimerInterval);
     }
-
     this.sleepTimerInterval = window.setInterval(() => {
       if (!this.sleepTimerState.active) return;
       if (this.sleepTimerState.remainingSec > 0) {
         this.sleepTimerState.remainingSec -= 1;
-
-        // Final 60 seconds: Fadeout
         if (this.sleepTimerState.remainingSec <= 60 && !this.sleepTimerState.fadeoutActive) {
           this.sleepTimerState.fadeoutActive = true;
         }
-
         if (this.sleepTimerState.fadeoutActive && this.masterGain && this.ctx) {
           const fadeVolume = Math.max(0, this.sleepTimerState.remainingSec / 60);
           this.masterGain.gain.setValueAtTime(fadeVolume, this.ctx.currentTime);
         }
-
         this.onSleepTimerUpdate?.({ ...this.sleepTimerState });
       } else {
-        // Sleep timer expired
         this.stopSleepTimer();
         this.pause();
       }
-    }, 1000);
-
+    }, 1e3);
     this.onSleepTimerUpdate?.({ ...this.sleepTimerState });
   }
-
-  public stopSleepTimer() {
+  stopSleepTimer() {
     if (this.sleepTimerInterval !== null) {
       clearInterval(this.sleepTimerInterval);
       this.sleepTimerInterval = null;
@@ -533,12 +428,11 @@ export class AudioEngine {
     this.sleepTimerState.active = false;
     this.sleepTimerState.fadeoutActive = false;
     if (this.masterGain && this.ctx) {
-      this.masterGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(1, this.ctx.currentTime);
     }
     this.onSleepTimerUpdate?.({ ...this.sleepTimerState });
   }
-
-  public addSleepExtension(seconds = 300) {
+  addSleepExtension(seconds = 300) {
     if (!this.sleepTimerState.active) {
       this.startSleepTimer(seconds);
       return;
@@ -547,70 +441,58 @@ export class AudioEngine {
     if (this.sleepTimerState.remainingSec > 60) {
       this.sleepTimerState.fadeoutActive = false;
       if (this.masterGain && this.ctx) {
-        this.masterGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
+        this.masterGain.gain.setValueAtTime(1, this.ctx.currentTime);
       }
     }
     this.onSleepTimerUpdate?.({ ...this.sleepTimerState });
   }
-
-  public triggerShakeReset(): boolean {
+  triggerShakeReset() {
     if (!this.sleepTimerState.active || !this.sleepTimerState.shakeToResetEnabled) {
       return false;
     }
-    // Reset timer to original target duration
     this.sleepTimerState.remainingSec = this.sleepTimerState.targetDurationSec;
     this.sleepTimerState.fadeoutActive = false;
     if (this.masterGain && this.ctx) {
-      this.masterGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(1, this.ctx.currentTime);
     }
-
-    // Play subtle bedside chime
     this.playBedsideChime();
     this.onSleepTimerUpdate?.({ ...this.sleepTimerState });
     return true;
   }
-
-  private playBedsideChime() {
+  playBedsideChime() {
     this.initContext();
     if (!this.ctx) return;
     try {
       const now = this.ctx.currentTime;
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(523.25, now); // C5
-      osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.15); // E5
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(523.25, now);
+      osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.15);
       gain.gain.setValueAtTime(0.08, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-
+      gain.gain.exponentialRampToValueAtTime(1e-3, now + 0.5);
       osc.connect(gain);
       gain.connect(this.ctx.destination);
       osc.start(now);
       osc.stop(now + 0.5);
     } catch {
-      // ignore
     }
   }
-
-  private setupDeviceMotionListener() {
-    if (typeof window === 'undefined') return;
+  setupDeviceMotionListener() {
+    if (typeof window === "undefined") return;
     let lastX = 0, lastY = 0, lastZ = 0;
     let lastShakeTime = 0;
-
-    window.addEventListener('devicemotion', (e) => {
+    window.addEventListener("devicemotion", (e) => {
       if (!this.sleepTimerState.active || !this.sleepTimerState.shakeToResetEnabled) return;
       const acc = e.accelerationIncludingGravity;
       if (!acc || acc.x === null || acc.y === null || acc.z === null) return;
-
       const deltaX = Math.abs(acc.x - lastX);
       const deltaY = Math.abs(acc.y - lastY);
       const deltaZ = Math.abs(acc.z - lastZ);
-      const force = (deltaX + deltaY + deltaZ);
-
+      const force = deltaX + deltaY + deltaZ;
       lastX = acc.x;
       lastY = acc.y;
       lastZ = acc.z;
-
       const now = Date.now();
       if (now - lastShakeTime > 1500 && force > this.sleepTimerState.shakeSensitivity * 2.5) {
         lastShakeTime = now;
@@ -618,9 +500,8 @@ export class AudioEngine {
       }
     });
   }
-
   // --- Real-time FFT Waveform / Spectrum ---
-  public getVisualizerData(): Uint8Array {
+  getVisualizerData() {
     if (!this.analyser) {
       return new Uint8Array(64).fill(4);
     }
@@ -628,21 +509,17 @@ export class AudioEngine {
     this.analyser.getByteFrequencyData(data);
     return data;
   }
-
   // --- Event Subscriptions ---
-  public subscribePosition(callback: (posMs: number, autoRewind: AutoRewindState) => void) {
+  subscribePosition(callback) {
     this.onPositionUpdate = callback;
   }
-
-  public subscribeSleepTimer(callback: (state: SleepTimerState) => void) {
+  subscribeSleepTimer(callback) {
     this.onSleepTimerUpdate = callback;
   }
-
-  public subscribeState(callback: (isPlaying: boolean) => void) {
+  subscribeState(callback) {
     this.onStateChange = callback;
   }
-
-  public updateBookMeta(currentPosMs: number, totalDurationMs: number, dsp: DspSettings) {
+  updateBookMeta(currentPosMs, totalDurationMs, dsp) {
     this.currentTimeMs = currentPosMs;
     this.durationMs = totalDurationMs;
     this.setSpeed(dsp.speed);
@@ -654,5 +531,8 @@ export class AudioEngine {
     this.setMono(dsp.mono);
   }
 }
-
-export const audioEngine = new AudioEngine();
+const audioEngine = new AudioEngine();
+export {
+  AudioEngine,
+  audioEngine
+};

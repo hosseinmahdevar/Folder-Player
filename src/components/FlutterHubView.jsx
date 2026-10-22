@@ -4,34 +4,25 @@
  * FolderPlay Flutter Codebase Hub (Android & Desktop)
  * Interactive source code viewer and cross-platform architecture guide
  */
-
-import React, { useState } from 'react';
-import { 
-  Code2, 
-  Smartphone, 
-  Monitor, 
-  Copy, 
-  Check, 
-  Download, 
-  Layers, 
-  FileCode, 
-  CheckCircle2, 
-  ExternalLink,
-  Cpu,
-  FolderTree,
-  Terminal,
-  ShieldCheck
-} from 'lucide-react';
-
-export const FlutterHubView: React.FC = () => {
-  const [selectedFile, setSelectedFile] = useState<string>('pubspec.yaml');
+import { useState } from "react";
+import {
+  Smartphone,
+  Monitor,
+  Copy,
+  Check,
+  Download,
+  FileCode,
+  CheckCircle2,
+  Cpu
+} from "lucide-react";
+const FlutterHubView = () => {
+  const [selectedFile, setSelectedFile] = useState("pubspec.yaml");
   const [copied, setCopied] = useState(false);
-
-  const flutterFiles: Record<string, { path: string; category: string; description: string; content: string }> = {
-    'pubspec.yaml': {
-      path: 'pubspec.yaml',
-      category: 'Project Configuration',
-      description: 'Flutter SDK, audio_service, just_audio, sensors_plus, and ffi dependencies.',
+  const flutterFiles = {
+    "pubspec.yaml": {
+      path: "pubspec.yaml",
+      category: "Project Configuration",
+      description: "Flutter SDK, audio_service, just_audio, sensors_plus, and ffi dependencies.",
       content: `name: folderplay
 description: "FolderPlay - Offline Audiobook Player & Studio for Android and Desktop"
 publish_to: "none"
@@ -76,10 +67,10 @@ dependencies:
   google_fonts: ^6.2.1
   lucide_icons: ^0.257.0`
     },
-    'main.dart': {
-      path: 'lib/main.dart',
-      category: 'Entry Point',
-      description: 'Main application bootstrap with Desktop window_manager and Android AudioService initialization.',
+    "main.dart": {
+      path: "lib/main.dart",
+      category: "Entry Point",
+      description: "Main application bootstrap with Desktop window_manager and Android AudioService initialization.",
       content: `import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
@@ -130,10 +121,10 @@ Future<void> main() async {
   runApp(const FolderPlayApp());
 }`
     },
-    'book.dart': {
-      path: 'lib/core/domain/model/book.dart',
-      category: 'Domain Model (Pure Dart)',
-      description: 'Book aggregate root, playback position, and equalizer config (Invariant AD-1: zero UI dependencies).',
+    "book.dart": {
+      path: "lib/core/domain/model/book.dart",
+      category: "Domain Model (Pure Dart)",
+      description: "Book aggregate root, playback position, and equalizer config (Invariant AD-1: zero UI dependencies).",
       content: `/// FolderPlay Domain: Book Aggregate Root
 /// Zero external UI dependencies (Pure Dart - Invariant AD-1)
 
@@ -173,10 +164,10 @@ class PlaybackPosition {
   });
 }`
     },
-    'auto_rewind_calculator.dart': {
-      path: 'lib/core/domain/algorithm/auto_rewind_calculator.dart',
-      category: 'Domain Algorithm',
-      description: 'FR-6 pause-proportional auto-rewind mathematical step calculation.',
+    "auto_rewind_calculator.dart": {
+      path: "lib/core/domain/algorithm/auto_rewind_calculator.dart",
+      category: "Domain Algorithm",
+      description: "FR-6 pause-proportional auto-rewind mathematical step calculation.",
       content: `/// Realizes FR-6: Dynamic Auto-Rewind based on pause duration
 class AutoRewindCalculator {
   static int calculateOffsetSeconds(int pausedSeconds) {
@@ -197,10 +188,10 @@ class AutoRewindCalculator {
   }
 }`
     },
-    'sidecar_serializer.dart': {
-      path: 'lib/infra/storage/sidecar_serializer.dart',
-      category: 'Infrastructure Adapter',
-      description: 'Invariant AD-4: Atomic two-phase sidecar writes (.tmp -> rename) for position.sabp.dat, bookmarks.sabp.xml, characters.sabp.xml.',
+    "sidecar_serializer.dart": {
+      path: "lib/infra/storage/sidecar_serializer.dart",
+      category: "Infrastructure Adapter",
+      description: "Invariant AD-4: Atomic two-phase sidecar writes (.tmp -> rename) for position.sabp.dat, bookmarks.sabp.xml, characters.sabp.xml.",
       content: `import 'dart:io';
 import 'package:xml/xml.dart';
 
@@ -225,10 +216,10 @@ class SidecarSerializer {
   }
 }`
     },
-    'audio_book_audio_handler.dart': {
-      path: 'lib/app/service/audio_book_audio_handler.dart',
-      category: 'Audio Service & Background',
-      description: 'Invariant AD-5: Single source of playback truth. Coordinates lock screen, sleep timer fadeout, and Android Auto.',
+    "audio_book_audio_handler.dart": {
+      path: "lib/app/service/audio_book_audio_handler.dart",
+      category: "Audio Service & Background",
+      description: "Invariant AD-5: Single source of playback truth. Coordinates lock screen, sleep timer fadeout, and Android Auto.",
       content: `import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 
@@ -262,10 +253,10 @@ class AudioBookAudioHandler extends BaseAudioHandler with SeekHandler {
   }
 }`
     },
-    'build-and-release.yml': {
-      path: '.github/workflows/build-and-release.yml',
-      category: 'CI/CD & GitHub Actions',
-      description: 'Multi-platform matrix building Android APK/AAB, Linux x64, Windows x64, macOS Universal, and publishing GitHub Releases.',
+    "build-and-release.yml": {
+      path: ".github/workflows/build-and-release.yml",
+      category: "CI/CD & GitHub Actions",
+      description: "Multi-platform matrix building Android APK/AAB, Linux x64, Windows x64, macOS Universal, and publishing GitHub Releases.",
       content: `name: FolderPlay Multi-Platform Build & Release
 
 on:
@@ -325,10 +316,10 @@ jobs:
         with:
           files: release-assets/*`
     },
-    'deploy-web.yml': {
-      path: '.github/workflows/deploy-web.yml',
-      category: 'CI/CD & GitHub Actions',
-      description: 'Automated GitHub Pages deployment workflow on pushes to main.',
+    "deploy-web.yml": {
+      path: ".github/workflows/deploy-web.yml",
+      category: "CI/CD & GitHub Actions",
+      description: "Automated GitHub Pages deployment workflow on pushes to main.",
       content: `name: Deploy Web to GitHub Pages
 
 on:
@@ -360,10 +351,10 @@ jobs:
           path: './dist'
       - uses: actions/deploy-pages@v4`
     },
-    'AndroidManifest.xml': {
-      path: 'android/app/src/main/AndroidManifest.xml',
-      category: 'Android Native Config',
-      description: 'MediaBrowserService, Foreground Service permissions, MediaButtonReceiver, and Android Auto metadata.',
+    "AndroidManifest.xml": {
+      path: "android/app/src/main/AndroidManifest.xml",
+      category: "Android Native Config",
+      description: "MediaBrowserService, Foreground Service permissions, MediaButtonReceiver, and Android Auto metadata.",
       content: `<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.folderplay.audiobook">
 
@@ -390,29 +381,25 @@ jobs:
 </manifest>`
     }
   };
-
-  const currentFileObj = flutterFiles[selectedFile] || flutterFiles['pubspec.yaml'];
-
+  const currentFileObj = flutterFiles[selectedFile] || flutterFiles["pubspec.yaml"];
   const handleCopyCode = () => {
     navigator.clipboard.writeText(currentFileObj.content);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 2e3);
   };
-
   const handleDownloadAll = () => {
-    // Download current file
-    const blob = new Blob([currentFileObj.content], { type: 'text/plain;charset=utf-8' });
+    const blob = new Blob([currentFileObj.content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = currentFileObj.path.split('/').pop() || 'file.dart';
+    a.download = currentFileObj.path.split("/").pop() || "file.dart";
     a.click();
     URL.revokeObjectURL(url);
   };
-
-  return (
-    <div className="w-full flex flex-col gap-6 max-w-7xl mx-auto">
-      {/* Top Banner */}
+  return <div className="w-full flex flex-col gap-6 max-w-7xl mx-auto">
+      {
+    /* Top Banner */
+  }
       <div className="bg-[var(--bg-surface-low)] border border-[var(--border-subtle)] rounded-xl p-6 shadow-xl hardware-plate flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-[var(--primary-container)]/15 border border-[var(--primary-container)]/30 flex items-center justify-center text-[var(--primary-container)]">
@@ -435,27 +422,31 @@ jobs:
 
         <div className="flex items-center gap-3">
           <button
-            onClick={handleCopyCode}
-            className="hardware-plate flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-[var(--text-high)] hover:text-[var(--primary-container)] transition-colors"
-          >
+    onClick={handleCopyCode}
+    className="hardware-plate flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-[var(--text-high)] hover:text-[var(--primary-container)] transition-colors"
+  >
             {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-            <span>{copied ? 'Copied' : 'Copy Active File'}</span>
+            <span>{copied ? "Copied" : "Copy Active File"}</span>
           </button>
 
           <a
-            href="/downloads/flutter_folderplay.tar.gz"
-            download="flutter_folderplay.tar.gz"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold bg-[var(--primary-container)] text-[var(--bg-base)] shadow-md hover:brightness-105 transition-all text-decoration-none"
-          >
+    href="/downloads/flutter_folderplay.tar.gz"
+    download="flutter_folderplay.tar.gz"
+    className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold bg-[var(--primary-container)] text-[var(--bg-base)] shadow-md hover:brightness-105 transition-all text-decoration-none"
+  >
             <Download className="w-4 h-4" />
             <span>Download Full Flutter Package (.tar.gz)</span>
           </a>
         </div>
       </div>
 
-      {/* Cross-Platform Matrix: Android vs Desktop */}
+      {
+    /* Cross-Platform Matrix: Android vs Desktop */
+  }
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Android Target Card */}
+        {
+    /* Android Target Card */
+  }
         <div className="bg-[var(--bg-surface-low)] border border-[var(--border-subtle)] rounded-xl p-5 shadow-md hardware-plate flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-2.5">
             <div className="flex items-center gap-2.5">
@@ -487,7 +478,9 @@ jobs:
           </ul>
         </div>
 
-        {/* Desktop Target Card */}
+        {
+    /* Desktop Target Card */
+  }
         <div className="bg-[var(--bg-surface-low)] border border-[var(--border-subtle)] rounded-xl p-5 shadow-md hardware-plate flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-2.5">
             <div className="flex items-center gap-2.5">
@@ -520,9 +513,13 @@ jobs:
         </div>
       </div>
 
-      {/* Codebase File Explorer & Interactive Source Viewer */}
+      {
+    /* Codebase File Explorer & Interactive Source Viewer */
+  }
       <div className="bg-[var(--bg-surface-low)] border border-[var(--border-subtle)] rounded-xl p-5 shadow-xl hardware-plate flex flex-col lg:flex-row gap-5 items-start">
-        {/* Left: File Tree Directory */}
+        {
+    /* Left: File Tree Directory */
+  }
         <div className="w-full lg:w-72 shrink-0 flex flex-col gap-2">
           <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-muted)] px-2 pb-1 border-b border-[var(--border-subtle)]">
             <span>Flutter Code Tree</span>
@@ -531,31 +528,27 @@ jobs:
 
           <div className="flex flex-col gap-1 max-h-[480px] overflow-y-auto pr-1">
             {Object.entries(flutterFiles).map(([key, item]) => {
-              const isSelected = selectedFile === key;
-              return (
-                <button
-                  key={key}
-                  onClick={() => setSelectedFile(key)}
-                  className={`flex flex-col items-start p-2.5 rounded-lg text-left transition-colors border ${
-                    isSelected
-                      ? 'bg-[var(--bg-surface-high)] border-[var(--primary-container)]/50 text-[var(--primary)] shadow-sm'
-                      : 'bg-[var(--bg-surface)] border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-white hover:bg-[var(--bg-surface-highest)]'
-                  }`}
-                >
+    const isSelected = selectedFile === key;
+    return <button
+      key={key}
+      onClick={() => setSelectedFile(key)}
+      className={`flex flex-col items-start p-2.5 rounded-lg text-left transition-colors border ${isSelected ? "bg-[var(--bg-surface-high)] border-[var(--primary-container)]/50 text-[var(--primary)] shadow-sm" : "bg-[var(--bg-surface)] border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-white hover:bg-[var(--bg-surface-highest)]"}`}
+    >
                   <div className="flex items-center gap-2 w-full">
-                    <FileCode className={`w-4 h-4 shrink-0 ${isSelected ? 'text-[var(--primary-container)]' : 'text-gray-500'}`} />
+                    <FileCode className={`w-4 h-4 shrink-0 ${isSelected ? "text-[var(--primary-container)]" : "text-gray-500"}`} />
                     <span className="font-mono text-xs font-bold truncate">{key}</span>
                   </div>
                   <span className="text-[10px] text-[var(--text-muted)] mt-0.5 truncate w-full">
                     {item.path}
                   </span>
-                </button>
-              );
-            })}
+                </button>;
+  })}
           </div>
         </div>
 
-        {/* Right: Code Viewer */}
+        {
+    /* Right: Code Viewer */
+  }
         <div className="flex-1 w-full flex flex-col gap-3 min-w-0">
           <div className="flex items-center justify-between bg-[var(--bg-surface)] p-3 rounded-lg border border-[var(--border-subtle)]">
             <div className="flex flex-col min-w-0">
@@ -573,11 +566,11 @@ jobs:
             </div>
 
             <button
-              onClick={handleCopyCode}
-              className="hardware-plate flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[var(--text-high)] hover:text-[var(--primary-container)] shrink-0 ml-2"
-            >
+    onClick={handleCopyCode}
+    className="hardware-plate flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[var(--text-high)] hover:text-[var(--primary-container)] shrink-0 ml-2"
+  >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copied ? 'Copied' : 'Copy'}</span>
+              <span>{copied ? "Copied" : "Copy"}</span>
             </button>
           </div>
 
@@ -588,6 +581,8 @@ jobs:
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
+};
+export {
+  FlutterHubView
 };
