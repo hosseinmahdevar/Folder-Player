@@ -68,7 +68,7 @@ jobs:
 
       # Self-healing: ensures Android platform files & gradle wrappers exist
       - name: Ensure Android platform files
-        run: flutter create --platforms=android .
+        run: flutter create --platforms=android --project-name folderplay .
 
       - name: Install Dependencies
         run: flutter pub get
@@ -115,7 +115,7 @@ jobs:
 
       # Self-healing: ensures Linux desktop runner & CMake files exist
       - name: Ensure Linux platform files
-        run: flutter create --platforms=linux .
+        run: flutter create --platforms=linux --project-name folderplay .
 
       - name: Install Dependencies
         run: flutter pub get
@@ -156,7 +156,7 @@ jobs:
 
       # Self-healing: ensures Windows desktop runner & CMake files exist
       - name: Ensure Windows platform files
-        run: flutter create --platforms=windows .
+        run: flutter create --platforms=windows --project-name folderplay .
 
       - name: Install Dependencies
         run: flutter pub get
@@ -198,7 +198,7 @@ jobs:
 
       # Self-healing: ensures macOS desktop runner files exist
       - name: Ensure macOS platform files
-        run: flutter create --platforms=macos .
+        run: flutter create --platforms=macos --project-name folderplay .
 
       - name: Install Dependencies
         run: flutter pub get
@@ -208,7 +208,9 @@ jobs:
 
       - name: Package macOS Tarball
         run: |
-          tar -czvf folderplay-macos-universal.tar.gz -C build/macos/Build/Products/Release FolderPlay.app
+          APP_BUNDLE=$(ls -d build/macos/Build/Products/Release/*.app | head -n 1)
+          APP_NAME=$(basename "$APP_BUNDLE")
+          tar -czvf folderplay-macos-universal.tar.gz -C build/macos/Build/Products/Release "$APP_NAME"
 
       - name: Archive macOS Artifact
         uses: actions/upload-artifact@v4
